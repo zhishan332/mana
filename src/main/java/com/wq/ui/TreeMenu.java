@@ -48,7 +48,7 @@ public class TreeMenu extends JPopupMenu implements Page {
 
     @Override
     public void constructPage() {
-        delItem = new JMenuItem("从磁盘删除",new ImageIcon(Constan.RESPAHT + "img/del.png"));
+        delItem = new JMenuItem("从磁盘删除",new ImageIcon(Constan.RESPAHT + "res/img/del.png"));
         delItem.setFont(FontUtil.getSong12());
         delItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -59,7 +59,7 @@ public class TreeMenu extends JPopupMenu implements Page {
             }
         });
 
-        fireItem = new JMenuItem("进入磁盘目录",new ImageIcon(Constan.RESPAHT + "img/fire.png"));
+        fireItem = new JMenuItem("进入磁盘目录",new ImageIcon(Constan.RESPAHT + "res/img/fire.png"));
         fireItem.setFont(FontUtil.getSong12());
         fireItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {

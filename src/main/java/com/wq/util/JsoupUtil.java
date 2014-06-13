@@ -47,7 +47,7 @@ public class JsoupUtil {
 
     public static Set<String> getImgTag(Document doc) {
         Set<String> set = new HashSet<String>();
-        Elements links = doc.getElementsByTag("img");
+        Elements links = doc.getElementsByTag("res/img");
         for (Element link : links) {
             String linkHref = link.absUrl("src").trim();
             if ("".equals(linkHref)) {

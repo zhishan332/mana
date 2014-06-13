@@ -34,11 +34,11 @@ public class VipcTreeCellRenderer extends DefaultTreeCellRenderer {
         TreeNode[] paths = node.getPath();
         Toolkit tk = Toolkit.getDefaultToolkit();
         if (paths.length == 2) {//映射文件夹
-            this.setIcon(new ImageIcon(tk.createImage(Constan.RESPAHT+"img/fuck.png")));
+            this.setIcon(new ImageIcon(tk.createImage(Constan.RESPAHT+ "res/img/fuck.png")));
         } else if (leaf) {
-            this.setIcon(new ImageIcon(tk.createImage(Constan.RESPAHT+"img/folder.png")));
+            this.setIcon(new ImageIcon(tk.createImage(Constan.RESPAHT+ "res/img/folder.png")));
         } else {
-            this.setIcon(new ImageIcon(tk.createImage(Constan.RESPAHT+"img/bag.png")));
+            this.setIcon(new ImageIcon(tk.createImage(Constan.RESPAHT+ "res/img/bag.png")));
         }
     }
 

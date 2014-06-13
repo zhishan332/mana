@@ -2,13 +2,12 @@ package com.wq.run;
 
 import com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel;
 import com.wq.cache.AllCache;
-import com.wq.service.ListService;
-import com.wq.service.ListServiceImpl;
 import com.wq.service.SysDataHandler;
 import com.wq.ui.FirstDialog;
 import com.wq.ui.ValidateDialog;
 import com.wq.ui.VpicFrame;
-import com.wq.util.LightLog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +21,7 @@ import java.awt.*;
  * 界面启动
  */
 public class StartUi {
+    private static final Logger log = LoggerFactory.getLogger(StartUi.class);
 //    private static LightLog logger = LightLog.getInstance(StartUi.class);
     public static void main(String args[]) {
         //设置样式

@@ -49,7 +49,7 @@ public class ViewPanelMenu extends JPopupMenu implements Page {
         });
         saveItem.setEnabled(false);
 //        this.add(saveItem);//TODO
-        hideItem = new JMenuItem("隐藏右方菜单",new ImageIcon(Constan.RESPAHT + "img/left.png"));
+        hideItem = new JMenuItem("隐藏右方菜单",new ImageIcon(Constan.RESPAHT + "res/img/left.png"));
         hideItem.setFont(FontUtil.getSong12());
         hideItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -61,7 +61,7 @@ public class ViewPanelMenu extends JPopupMenu implements Page {
             }
         });
         this.add(hideItem);
-        showItem = new JMenuItem("显示右方菜单",new ImageIcon(Constan.RESPAHT + "img/right.png"));
+        showItem = new JMenuItem("显示右方菜单",new ImageIcon(Constan.RESPAHT + "res/img/right.png"));
         showItem.setFont(FontUtil.getSong12());
         showItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {

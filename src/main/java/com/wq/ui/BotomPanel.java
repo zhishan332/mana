@@ -53,7 +53,7 @@ public class BotomPanel extends JPanel implements Page {
         numField.setMaximumSize(new Dimension(100, 20));
         memoryPanel.setPreferredSize(new Dimension(100, 16));
         memoryPanel.setMaximumSize(new Dimension(100, 16));
-        JButton rubBtn = ButtonUtil.createJButton(Constan.RESPAHT+"img/rub.png", null, null);
+        JButton rubBtn = ButtonUtil.createJButton(Constan.RESPAHT+ "res/img/rub.png", null, null);
         rubBtn.setPreferredSize(new Dimension(16, 16));
         rubBtn.setMaximumSize(new Dimension(16, 16));
         rubBtn.setToolTipText("清理内存");

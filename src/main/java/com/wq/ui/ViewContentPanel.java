@@ -1,21 +1,27 @@
 package com.wq.ui;
 
 import com.wq.cache.AllCache;
+import com.wq.cache.ImageCacheManager;
 import com.wq.constans.Constan;
 import com.wq.model.SysData;
+import com.wq.service.ListService;
+import com.wq.service.ListServiceImpl;
 import com.wq.service.SysDataHandler;
 import com.wq.util.FontUtil;
 import com.wq.util.ImageUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,7 +33,12 @@ import java.util.List;
  * 图床 ,对JAVA6.0,它支持得图象格式有[BMP, bmp, jpg, JPG, wbmp, jpeg, png, PNG, JPEG, WBMP, GIF, gif]
  */
 public class ViewContentPanel extends JPanel implements Page {
+    private static final Logger log = LoggerFactory.getLogger(ViewContentPanel.class);
     private static ViewContentPanel viewContentPanel;
+    private JLabel jWaitLabel = new JLabel();
+    private JButton nextButton;
+    private JButton preButton;
+    private ListService listService= ListServiceImpl.getInstance();
     private SysData data = SysDataHandler.getInstance().getData();
 //    public static ViewContentPanel getInstance() {
 //        if (viewContentPanel == null) {
@@ -37,9 +48,10 @@ public class ViewContentPanel extends JPanel implements Page {
 //    }
 
     private List<String> list = new LinkedList<String>();
-
-    public ViewContentPanel(List<String> list) {
+    private int start;
+    public ViewContentPanel(List<String> list,int start) {
         this.list = list;
+        this.start=start;
         constructPlate();
         constructPage();
     }
@@ -61,7 +73,28 @@ public class ViewContentPanel extends JPanel implements Page {
 
     @Override
     public void constructPage() {
-        loadPic(list);
+        log.info("开始加载图片....................");
+        showWait();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                long beg=System.currentTimeMillis();
+                List<String> loadList=new ArrayList<String>();
+                for(int i=start;i<list.size()&&i<start+10;i++){
+                    loadList.add(list.get(i));
+                }
+                if(start>0){
+                    addPreButton(list,start);
+                }
+                loadPic(loadList);
+                hideWait();
+                if(list.size()>(start+10)){
+                    addNextButton(list,start);
+                }
+                log.info("图片加载完成，耗时："+(System.currentTimeMillis()-beg)+"ms");
+            }
+        });
+
         if (!data.isHMode()) {
             this.add(Box.createVerticalGlue());
         } else {
@@ -86,20 +119,39 @@ public class ViewContentPanel extends JPanel implements Page {
      */
     private void dealCommonPic(final String path) {
         BufferedImage bufferedImage = null;
-        Image img = null;
+
         boolean isgif = false;
-        try {
-            if (path.endsWith(".gif") || path.endsWith(".GIF")) {
-                isgif = true;
+        Image img = null;
+        Object cache = ImageCacheManager.getInstance().getCache().get(path);
+        if (path.endsWith(".gif") || path.endsWith(".GIF")) {
+            isgif = true;
+            if(cache!=null){
+                img= (Image) cache;
+                log.info("从缓存中加载："+path);
+            }else{
                 Toolkit tk = Toolkit.getDefaultToolkit();
                 img = tk.createImage(path);
-                bufferedImage = ImageUtils.toBufferedImage(img);
-            } else {
-                bufferedImage = ImageIO.read(new FileInputStream(path));
+                if(null!=img) {
+                    ImageCacheManager.getInstance().getCache().put(path,img);
+                    log.info("放入缓存："+path);
+                }
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            bufferedImage = ImageUtils.toBufferedImage(img);
+        }else{
+            if(cache!=null){
+                bufferedImage= (BufferedImage) cache;
+                log.info("从缓存中加载："+path);
+            }else{
+                try {
+                    bufferedImage = ImageIO.read(new FileInputStream(path));
+                    if(null!=bufferedImage) {
+                        ImageCacheManager.getInstance().getCache().put(path,bufferedImage);
+                        log.info("放入缓存："+path);
+                    }
+                } catch (Throwable e) {
+                    log.error("读取图片异常", e);
+                }
+            }
         }
         if (bufferedImage == null) return;
         final JLabel jLabel = new JLabel();
@@ -165,21 +217,10 @@ public class ViewContentPanel extends JPanel implements Page {
 
     public void loadPic(final List<String> list) {
         if (list != null) {
-            int i = 0;
             for (final String path : list) {
                 File file = new File(path);
                 if (!file.exists()) continue;
-                if (i == 0 || i == 1) {
-                    dealCommonPic(path);
-                } else {
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            dealCommonPic(path);
-                        }
-                    });
-                }
-                i++;
+                dealCommonPic(path);
             }
         } else {
             JLabel jLabel = new JLabel();
@@ -192,6 +233,45 @@ public class ViewContentPanel extends JPanel implements Page {
             jLabel.setHorizontalAlignment(JLabel.CENTER);
             this.add(jLabel);
         }
+        this.validate();
+    }
+
+    private void showWait(){
+        jWaitLabel.setFont(FontUtil.getSong13());
+        jWaitLabel.setText("<html><h1>正在加载(waiting..)</h1>");
+        jWaitLabel.setForeground(Color.white);
+        jWaitLabel.setHorizontalAlignment(JLabel.CENTER);
+        this.add(jWaitLabel);
+        this.validate();
+    }
+
+    private void hideWait(){
+        this.remove(jWaitLabel);
+        this.validate();
+    }
+    private void addPreButton(final List<String> list, final int start){
+        preButton=new JButton(new ImageIcon(Constan.RESPAHT + "res/img/pre.png"));
+        preButton.setToolTipText("上一页");
+        preButton.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                listService.loadPic(list,start-10);
+            }
+        });
+        this.add(preButton);
+        this.validate();
+    }
+
+    private void addNextButton(final List<String> list, final int start){
+        nextButton=new JButton(new ImageIcon(Constan.RESPAHT + "res/img/next.png"));
+        nextButton.setToolTipText("下一页");
+        nextButton.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                listService.loadPic(list,start+10);
+            }
+        });
+        this.add(nextButton);
         this.validate();
     }
 

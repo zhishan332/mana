@@ -42,6 +42,13 @@ public class DefultCacheManager {
             return nwCache;
         } else return cacheMap.get(cacheName);
     }
+    public Cache getCache(String cacheName,int max) {
+        if (!cacheMap.keySet().contains(cacheName)) {
+            Cache nwCache = new SimpleMemCache(max, 1000 * 60, ExpiryStrategy.LRU);
+            cacheMap.put(cacheName, nwCache);
+            return nwCache;
+        } else return cacheMap.get(cacheName);
+    }
 
     public Cache getCache() {
         return defaultCache;

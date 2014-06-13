@@ -1,13 +1,10 @@
 package com.wq.ui;
 
 import com.wq.constans.Constan;
-import com.wq.service.SysDataHandler;
 import com.wq.util.FontUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,7 +33,7 @@ public class AboutDialog extends JDialog implements Page {
         pack();
         this.setTitle("关于Mana");
         Toolkit tk = Toolkit.getDefaultToolkit();
-        Image mImage = tk.createImage(Constan.RESPAHT + "img/logo.png");
+        Image mImage = tk.createImage(Constan.RESPAHT + "res/img/logo.png");
         setIconImage(mImage);
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();//获得屏幕的大小
         setLocation((screen.width - getSize().width) / 2, (screen.height - getSize().height) / 2);//使启动窗口居中显示

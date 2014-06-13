@@ -61,10 +61,10 @@ public class ListServiceImpl implements ListService {
         if (map != null && map.size() > 0) {
             for (Map.Entry<String, java.util.List<String>> entry : map.entrySet()) {
                 List<String> list = entry.getValue();
-                loadPic(list);
+                loadPic(list,0);
                 break;
             }
-        } else loadPic(null);
+        } else loadPic(null,0);
         Map<String, java.util.List<String>> map2 = AllCache.getInstance().getMenu();
         if (map2 != null) {
             for (Map.Entry<String, java.util.List<String>> entry : map2.entrySet()) {
@@ -88,10 +88,10 @@ public class ListServiceImpl implements ListService {
     /**
      * 根据图片列表加载图片
      */
-    public void loadPic(final List<String> list) {
+    public void loadPic(final List<String> list,int start) {
 //        ViewContentPanel.getInstance().clear();
 //        ViewContentPanel.getInstance().loadPic(list);
-        final ViewContentPanel viewContentPanel = new ViewContentPanel(list);
+        final ViewContentPanel viewContentPanel = new ViewContentPanel(list,start);
 //        HtmlPanel viewContentPanel=new HtmlPanel(HtmlUtil.getHtmlStrByList(list));
         viewContentPanel.repaint();
         ViewScrollPanel.getInstance().clear();

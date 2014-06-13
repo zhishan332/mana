@@ -37,7 +37,7 @@ public class ValidateDialog extends JDialog {
         this.setTitle("软件已加密");
         this.setLocationRelativeTo(null);
         Toolkit tk = Toolkit.getDefaultToolkit();
-        Image mImage = tk.createImage(Constan.RESPAHT+"img/logo.png");
+        Image mImage = tk.createImage(Constan.RESPAHT+ "res/img/logo.png");
         setIconImage(mImage);
         Container con = this.getContentPane();
         con.setLayout(null);

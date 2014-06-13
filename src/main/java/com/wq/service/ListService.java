@@ -40,7 +40,7 @@ public interface ListService {
      *
      * @param list
      */
-    public void loadPic(List<String> list);
+    public void loadPic(List<String> list,int start);
 
     /**
      * 保存面板中所有的图片

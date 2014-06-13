@@ -69,10 +69,10 @@ public class VpicFrame extends JFrame {
         BorderLayout layout = new BorderLayout();
         this.setLayout(layout);
         Toolkit tk = Toolkit.getDefaultToolkit();
-        Image mImage = tk.createImage(Constan.RESPAHT + "img/logo.png");
+        Image mImage = tk.createImage(Constan.RESPAHT + "res/img/logo.png");
         setIconImage(mImage);
         this.setResizable(true); //可以调整大小
-        this.setExtendedState(this.getExtendedState() | this.MAXIMIZED_BOTH);//全屏打开
+        this.setExtendedState(this.getExtendedState() | MAXIMIZED_BOTH);//全屏打开
         Dimension local_size = new Dimension(700, 600);
         Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation((screensize.width - local_size.width) / 2, (screensize.height - local_size.height) / 2);//设置窗体居中显示
@@ -127,7 +127,7 @@ public class VpicFrame extends JFrame {
         final MemoryPanel memoryPanel = new MemoryPanel();
         memoryPanel.setPreferredSize(new Dimension(100, 16));
         memoryPanel.setMaximumSize(new Dimension(100, 16));
-        JButton rubBtn = ButtonUtil.createJButton(Constan.RESPAHT + "img/rub.png", null, null);
+        JButton rubBtn = ButtonUtil.createJButton(Constan.RESPAHT + "res/img/rub.png", null, null);
         rubBtn.setPreferredSize(new Dimension(16, 16));
         rubBtn.setMaximumSize(new Dimension(16, 16));
         rubBtn.setToolTipText("清理内存");

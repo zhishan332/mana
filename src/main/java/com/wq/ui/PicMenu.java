@@ -73,7 +73,7 @@ public class PicMenu extends JPopupMenu implements Page {
 //        KeyStroke keyStroke1 = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK);
 //        saveItem.setAccelerator(keyStroke1);
 //        this.add(saveItem);
-        hideItem = new JMenuItem(" 隐藏右方菜单", new ImageIcon(Constan.RESPAHT + "img/left.png"));
+        hideItem = new JMenuItem(" 隐藏右方菜单", new ImageIcon(Constan.RESPAHT + "res/img/left.png"));
         hideItem.setFont(FontUtil.getSong12());
         hideItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -85,7 +85,7 @@ public class PicMenu extends JPopupMenu implements Page {
             }
         });
         this.add(hideItem);
-        showItem = new JMenuItem(" 显示右方菜单", new ImageIcon(Constan.RESPAHT + "img/right.png"));
+        showItem = new JMenuItem(" 显示右方菜单", new ImageIcon(Constan.RESPAHT + "res/img/right.png"));
         showItem.setFont(FontUtil.getSong12());
         showItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -105,7 +105,7 @@ public class PicMenu extends JPopupMenu implements Page {
         }
         this.add(showItem);
         this.add(new JPopupMenu.Separator());
-        openItem = new JMenuItem(" 文件夹中显示", new ImageIcon(Constan.RESPAHT + "img/fire.png"));
+        openItem = new JMenuItem(" 文件夹中显示", new ImageIcon(Constan.RESPAHT + "res/img/fire.png"));
         openItem.setFont(FontUtil.getSong12());
         openItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -156,7 +156,7 @@ public class PicMenu extends JPopupMenu implements Page {
             }
         });
         this.add(saveAsItem);
-        delItem = new JMenuItem(" 删除(磁盘删除)", new ImageIcon(Constan.RESPAHT + "img/del.png"));
+        delItem = new JMenuItem(" 删除(磁盘删除)", new ImageIcon(Constan.RESPAHT + "res/img/del.png"));
         delItem.setFont(FontUtil.getSong12());
         delItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {

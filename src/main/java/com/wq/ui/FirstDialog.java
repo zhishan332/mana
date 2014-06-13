@@ -38,7 +38,7 @@ public class FirstDialog extends JDialog implements Page {
         con.setLayout(null);
         this.setTitle("请选择一个图片文件夹");
         Toolkit tk = Toolkit.getDefaultToolkit();
-        Image mImage = tk.createImage(Constan.RESPAHT + "img/logo.png");
+        Image mImage = tk.createImage(Constan.RESPAHT + "res/img/logo.png");
         setIconImage(mImage);
         this.setLocationRelativeTo(null);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);//设置关闭操作

@@ -60,7 +60,7 @@ public class FetchImgPanel extends JFrame implements Page {
         this.setLayout(null);
         this.setResizable(false);
         Toolkit tk = Toolkit.getDefaultToolkit();
-        Image mImage = tk.createImage(Constan.RESPAHT + "img/logo.png");
+        Image mImage = tk.createImage(Constan.RESPAHT + "res/img/logo.png");
         setIconImage(mImage);
         container = this.getContentPane();
         this.addWindowFocusListener(new WindowAdapter() {  //这个事件让窗口一直在最前面

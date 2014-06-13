@@ -7,6 +7,8 @@ import com.wq.model.DirMenu;
 import com.wq.model.SysData;
 import com.wq.service.*;
 import com.wq.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -33,6 +35,7 @@ import java.util.Set;
  * To change this template use File | Settings | File Templates.
  */
 public class ListPanel extends JPanel implements Page {
+    private static final Logger log = LoggerFactory.getLogger(ListPanel.class);
     private JScrollPane listPanelContainer;
     private DefaultMutableTreeNode root, child, chosen;
     private JTree tree;
@@ -75,14 +78,14 @@ public class ListPanel extends JPanel implements Page {
         JToolBar toolBar = new JToolBar();
         toolBar.setFloatable(false);
         toolBar.setBorderPainted(false); //不画边界
-        JButton addBtn = new JButton(new ImageIcon(Constan.RESPAHT + "img/add.png"));
+        JButton addBtn = new JButton(new ImageIcon(Constan.RESPAHT + "res/img/add.png"));
         addBtn.setToolTipText("增加文件夹映射");
         addBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 chooseFile();
             }
         });
-        JButton delBtn = new JButton(new ImageIcon(Constan.RESPAHT + "img/fuckdel.png"));
+        JButton delBtn = new JButton(new ImageIcon(Constan.RESPAHT + "res/img/fuckdel.png"));
         delBtn.setToolTipText("删除文件夹映射");
         delBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -101,22 +104,22 @@ public class ListPanel extends JPanel implements Page {
                 }
             }
         });
-        JButton fireBtn = new JButton(new ImageIcon(Constan.RESPAHT + "img/fire.png"));
+        JButton fireBtn = new JButton(new ImageIcon(Constan.RESPAHT + "res/img/fire.png"));
         fireBtn.setToolTipText("命中");
         fireBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+                if(node==null) return;
                 DirMenu dirMenu = (DirMenu) node.getUserObject();//获得这个结点的名称
                 String path = dirMenu.getFilePath();
                 try {
                     java.awt.Desktop.getDesktop().open(new File(path));
                 } catch (IOException exp) {
-                    // TODO Auto-generated catch block
-                    exp.printStackTrace();
+                    log.error("打开文件夹失败",exp);
                 }
             }
         });
-        JButton setBtn = new JButton(new ImageIcon(Constan.RESPAHT + "img/set.png"));
+        JButton setBtn = new JButton(new ImageIcon(Constan.RESPAHT + "res/img/set.png"));
         setBtn.setToolTipText("设置");
         setBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -171,7 +174,7 @@ public class ListPanel extends JPanel implements Page {
                 setPanel.setVisible(true);
             }
         });
-        JButton ctBtn = new JButton(new ImageIcon(Constan.RESPAHT + "img/catch.png"));
+        JButton ctBtn = new JButton(new ImageIcon(Constan.RESPAHT + "res/img/catch.png"));
         ctBtn.setToolTipText("网页取图");
         ctBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -182,7 +185,7 @@ public class ListPanel extends JPanel implements Page {
                 FetchImgPanel.getInstance().setVisible(true);
             }
         });
-        JButton reBtn = new JButton(new ImageIcon(Constan.RESPAHT + "img/refresh.gif"));
+        JButton reBtn = new JButton(new ImageIcon(Constan.RESPAHT + "res/img/refresh.gif"));
         reBtn.setToolTipText("刷新文件夹");
         reBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -194,7 +197,7 @@ public class ListPanel extends JPanel implements Page {
                 listService.reloadTreeData();
             }
         });
-        JButton aboutBtn = new JButton(new ImageIcon(Constan.RESPAHT + "img/help.png"));
+        JButton aboutBtn = new JButton(new ImageIcon(Constan.RESPAHT + "res/img/help.png"));
         aboutBtn.setToolTipText("关于");
         aboutBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -207,7 +210,7 @@ public class ListPanel extends JPanel implements Page {
                 });
             }
         });
-        JButton hideBtn = new JButton(new ImageIcon(Constan.RESPAHT + "img/left.png"));
+        JButton hideBtn = new JButton(new ImageIcon(Constan.RESPAHT + "res/img/left.png"));
         hideBtn.setToolTipText("快速隐藏");
         hideBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -266,7 +269,7 @@ public class ListPanel extends JPanel implements Page {
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                            listService.loadPic(list);
+                            listService.loadPic(list,0);
                         }
                     });
                 }

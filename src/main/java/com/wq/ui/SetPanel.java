@@ -78,7 +78,7 @@ public class SetPanel extends JFrame implements Page {
         this.setLayout(null);
         this.setResizable(false);
         Toolkit tk = Toolkit.getDefaultToolkit();
-        Image mImage = tk.createImage(Constan.RESPAHT + "img/logo.png");
+        Image mImage = tk.createImage(Constan.RESPAHT + "res/img/logo.png");
         setIconImage(mImage);
         container = this.getContentPane();
         this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);

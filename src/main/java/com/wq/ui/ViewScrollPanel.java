@@ -50,32 +50,52 @@ public class ViewScrollPanel extends JScrollPane implements Page {
      */
     @Override
     public void constructPage() {
-//        final JScrollBar jScrollBar = this.getVerticalScrollBar();
-//        jScrollBar.addAdjustmentListener(new AdjustmentListener() {
-//            private int height = 0;
+//        if(SysDataHandler.getInstance().getData().isHMode()){
+//            final JScrollBar jScrollBar2 = this.getHorizontalScrollBar();
+//            jScrollBar2.addAdjustmentListener(new AdjustmentListener() {
+//                private int with = 0;
 //
-//            @Override
-//            public void adjustmentValueChanged(AdjustmentEvent e) {
-//                int cur = jScrollBar.getValue();
-//                int max = jScrollBar.getMaximum();
-//                if ((cur - height > 3500) && (max - cur) < 1800) {
-//                    System.out.println("开始加载新图片...........................");
-//                    ViewContentPanel.getInstance().loadNextPic();
-//                    ViewPanel.getInstance().updateUI();
-//                    height = cur;
+//                @Override
+//                public void adjustmentValueChanged(AdjustmentEvent e) {
+//                    int cur = jScrollBar2.getValue();
+//                    with = cur;
+//                    System.out.println("cur:"+cur);
+//                    int max = jScrollBar2.getMaximum();
+//                    System.out.println("max:"+max);
+//                    System.out.println("差值:"+(max-cur));
+//                    if ((max - cur)<3000) {
+//                        System.out.println("开始加载新图片222222...........................");
+//                    }
+//
 //                }
-//            }
-//        });
-//        this.setViewportView(ViewContentPanel.getInstance());
+//            });
+//        }else{
+//            final JScrollBar jScrollBar = this.getVerticalScrollBar();
+//            jScrollBar.addAdjustmentListener(new AdjustmentListener() {
+//                private int height = 0;
+//
+//                @Override
+//                public void adjustmentValueChanged(AdjustmentEvent e) {
+//                    int cur = jScrollBar.getValue();
+//                    System.out.println("cur:"+cur);
+//                    int max = jScrollBar.getMaximum();
+//                    System.out.println("max:"+max);
+//                    if ((cur - height > 3500) && (max - cur) < 1800) {
+//                        System.out.println("开始加载新图片...........................");
+//                        height = cur;
+//                    }
+//                }
+//            });
+//        }
         Map<String, List<String>> map = AllCache.getInstance().getMenu();
         if (map == null || map.size() == 0) {
 //            ViewContentPanel.getInstance().setList(null);
-            this.setViewportView(new ViewContentPanel(null));
+            this.setViewportView(new ViewContentPanel(null,0));
 //            this.setViewportView(ViewContentPanel.getInstance());
         } else {
             for (Map.Entry<String, java.util.List<String>> entry : map.entrySet()) {
                 List<String> list = entry.getValue();
-                this.viewContentPanel = new ViewContentPanel(list);
+                this.viewContentPanel = new ViewContentPanel(list,0);
 //                ViewContentPanel viewContentPanel2 = ViewContentPanel.getInstance();
 //                viewContentPanel2.setList(list);
                 this.setViewportView(viewContentPanel);
