@@ -90,12 +90,12 @@ public class ViewScrollPanel extends JScrollPane implements Page {
         Map<String, List<String>> map = AllCache.getInstance().getMenu();
         if (map == null || map.size() == 0) {
 //            ViewContentPanel.getInstance().setList(null);
-            this.setViewportView(new ViewContentPanel(null,0));
+            this.setViewportView(new ViewContentPanel(null,null,0));
 //            this.setViewportView(ViewContentPanel.getInstance());
         } else {
             for (Map.Entry<String, java.util.List<String>> entry : map.entrySet()) {
                 List<String> list = entry.getValue();
-                this.viewContentPanel = new ViewContentPanel(list,0);
+                this.viewContentPanel = new ViewContentPanel(entry.getKey(),list,0);
 //                ViewContentPanel viewContentPanel2 = ViewContentPanel.getInstance();
 //                viewContentPanel2.setList(list);
                 this.setViewportView(viewContentPanel);

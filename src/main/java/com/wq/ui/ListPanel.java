@@ -269,7 +269,7 @@ public class ListPanel extends JPanel implements Page {
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                            listService.loadPic(list,0);
+                            listService.loadPic(dirMenu.getFilePath(),list,0);
                         }
                     });
                 }

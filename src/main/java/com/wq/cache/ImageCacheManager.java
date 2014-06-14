@@ -11,7 +11,8 @@ public class ImageCacheManager {
     private Cache imageCache;
 
     private ImageCacheManager() {
-        imageCache = new SimpleMemCache(200, 1000 * 60, ExpiryStrategy.LRU);
+        //缓存100M数据
+        imageCache = new SimpleMemCache(340, 1000 * 60, ExpiryStrategy.LRU);
     }
 
     /**

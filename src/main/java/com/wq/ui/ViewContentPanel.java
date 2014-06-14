@@ -1,12 +1,15 @@
 package com.wq.ui;
 
 import com.wq.cache.AllCache;
+import com.wq.cache.FileCacheHelper;
 import com.wq.cache.ImageCacheManager;
 import com.wq.constans.Constan;
+import com.wq.model.FileCacheModel;
 import com.wq.model.SysData;
 import com.wq.service.ListService;
 import com.wq.service.ListServiceImpl;
 import com.wq.service.SysDataHandler;
+import com.wq.util.ButtonUtil;
 import com.wq.util.FontUtil;
 import com.wq.util.ImageUtils;
 import org.slf4j.Logger;
@@ -36,8 +39,6 @@ public class ViewContentPanel extends JPanel implements Page {
     private static final Logger log = LoggerFactory.getLogger(ViewContentPanel.class);
     private static ViewContentPanel viewContentPanel;
     private JLabel jWaitLabel = new JLabel();
-    private JButton nextButton;
-    private JButton preButton;
     private ListService listService= ListServiceImpl.getInstance();
     private SysData data = SysDataHandler.getInstance().getData();
 //    public static ViewContentPanel getInstance() {
@@ -49,9 +50,11 @@ public class ViewContentPanel extends JPanel implements Page {
 
     private List<String> list = new LinkedList<String>();
     private int start;
-    public ViewContentPanel(List<String> list,int start) {
+    private String folder;
+    public ViewContentPanel(String folder,List<String> list,int start) {
         this.list = list;
         this.start=start;
+        this.folder=folder;
         constructPlate();
         constructPage();
     }
@@ -74,7 +77,9 @@ public class ViewContentPanel extends JPanel implements Page {
     @Override
     public void constructPage() {
         log.info("开始加载图片....................");
-        showWait();
+        if(list!=null && !list.isEmpty() && list.size()>5){
+            showWait();
+        }
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -117,43 +122,43 @@ public class ViewContentPanel extends JPanel implements Page {
      *
      * @param path
      */
-    private void dealCommonPic(final String path) {
+    private JLabel getImageLabel(final String path,final boolean needCache) {
         BufferedImage bufferedImage = null;
 
         boolean isgif = false;
         Image img = null;
-        Object cache = ImageCacheManager.getInstance().getCache().get(path);
+//        Object cache = ImageCacheManager.getInstance().getCache().get(path);
         if (path.endsWith(".gif") || path.endsWith(".GIF")) {
             isgif = true;
-            if(cache!=null){
-                img= (Image) cache;
-                log.info("从缓存中加载："+path);
-            }else{
+//            if(cache!=null){
+//                img= (Image) cache;
+//                log.info("从缓存中加载："+path);
+//            }else{
                 Toolkit tk = Toolkit.getDefaultToolkit();
                 img = tk.createImage(path);
-                if(null!=img) {
-                    ImageCacheManager.getInstance().getCache().put(path,img);
-                    log.info("放入缓存："+path);
-                }
-            }
+//                if(null!=img && needCache) {
+//                    ImageCacheManager.getInstance().getCache().put(path,img);
+//                    log.info("放入缓存："+path);
+//                }
+//            }
             bufferedImage = ImageUtils.toBufferedImage(img);
         }else{
-            if(cache!=null){
-                bufferedImage= (BufferedImage) cache;
-                log.info("从缓存中加载："+path);
-            }else{
+//            if(cache!=null){
+//                bufferedImage= (BufferedImage) cache;
+//                log.info("从缓存中加载："+path);
+//            }else{
                 try {
                     bufferedImage = ImageIO.read(new FileInputStream(path));
-                    if(null!=bufferedImage) {
-                        ImageCacheManager.getInstance().getCache().put(path,bufferedImage);
-                        log.info("放入缓存："+path);
-                    }
+//                    if(null!=bufferedImage && needCache) {
+//                        ImageCacheManager.getInstance().getCache().put(path,bufferedImage);
+//                        log.info("放入缓存："+path);
+//                    }
                 } catch (Throwable e) {
                     log.error("读取图片异常", e);
                 }
-            }
+//            }
         }
-        if (bufferedImage == null) return;
+        if (bufferedImage == null) return null;
         final JLabel jLabel = new JLabel();
         ImageIcon icon = null;
         if (data.isHMode()) {
@@ -201,26 +206,57 @@ public class ViewContentPanel extends JPanel implements Page {
                 }
             }
         });
-        if (!data.isHMode()) {
-            jLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        } else {
-            jLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
-        }
-        this.add(jLabel);
-        if (!data.isHMode()) {
-            this.add(Box.createVerticalStrut(7));
-        } else {
-            this.add(Box.createHorizontalStrut(7));
-        }
-        this.validate();
+       return jLabel;
     }
 
     public void loadPic(final List<String> list) {
         if (list != null) {
-            for (final String path : list) {
-                File file = new File(path);
-                if (!file.exists()) continue;
-                dealCommonPic(path);
+            File folderFile=new File(folder);
+            final long mdate= folderFile.lastModified();
+            final long hashCode=list.hashCode();
+            log.info("查询缓存，hashcode:"+hashCode+"，修改时间："+mdate);
+            FileCacheModel cache = FileCacheHelper.get(hashCode);
+            if(null!=cache){
+                log.info("命中缓存，缓存修改时间："+cache.getModifyDate()+",当前修改时间："+mdate);
+            }
+            List<JLabel> labels=new ArrayList<JLabel>();
+            boolean needCache=true;
+            if(cache!=null && cache.getModifyDate()==mdate){
+                log.info("从res/cache下加载图片>>>>>>>>>>>>>>>>>>");
+                labels= (List<JLabel>) cache.getObject();
+            }else{
+                for (final String path : list) {
+                    File file = new File(path);
+                    if (!file.exists()) continue;
+//                    if(file.length()>1024*300) needCache=false; //只缓存300K以下的数据
+                    JLabel imgLabel = getImageLabel(path,needCache);
+                    if(null!=imgLabel) labels.add(imgLabel);
+                }
+                final FileCacheModel fileCacheModel=new FileCacheModel();
+                fileCacheModel.setModifyDate(mdate);
+                fileCacheModel.setObject(labels);
+               if(!labels.isEmpty()){
+                   SwingUtilities.invokeLater(new Runnable() {
+                       @Override
+                       public void run() {
+                           FileCacheHelper.save(fileCacheModel, list.hashCode());
+                       }
+                   });
+               }
+            }
+            for(JLabel jLabel:labels){
+                if (!data.isHMode()) {
+                    jLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                } else {
+                    jLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
+                }
+                this.add(jLabel);
+                if (!data.isHMode()) {
+                    this.add(Box.createVerticalStrut(7));
+                } else {
+                    this.add(Box.createHorizontalStrut(7));
+                }
+                this.validate();
             }
         } else {
             JLabel jLabel = new JLabel();
@@ -238,7 +274,7 @@ public class ViewContentPanel extends JPanel implements Page {
 
     private void showWait(){
         jWaitLabel.setFont(FontUtil.getSong13());
-        jWaitLabel.setText("<html><h1>正在加载(waiting..)</h1>");
+        jWaitLabel.setText("<html><h1>图片略多，正在加载(waiting..)</h1>");
         jWaitLabel.setForeground(Color.white);
         jWaitLabel.setHorizontalAlignment(JLabel.CENTER);
         this.add(jWaitLabel);
@@ -250,27 +286,25 @@ public class ViewContentPanel extends JPanel implements Page {
         this.validate();
     }
     private void addPreButton(final List<String> list, final int start){
-        preButton=new JButton(new ImageIcon(Constan.RESPAHT + "res/img/pre.png"));
-        preButton.setToolTipText("上一页");
-        preButton.addActionListener(new AbstractAction() {
+        JButton preButton = ButtonUtil.createJButton(Constan.RESPAHT + "res/img/pre.png", null, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                listService.loadPic(list,start-10);
+                listService.loadPic(folder,list,start-10);
             }
         });
+        preButton.setToolTipText("上一页");
         this.add(preButton);
         this.validate();
     }
 
     private void addNextButton(final List<String> list, final int start){
-        nextButton=new JButton(new ImageIcon(Constan.RESPAHT + "res/img/next.png"));
-        nextButton.setToolTipText("下一页");
-        nextButton.addActionListener(new AbstractAction() {
+        JButton nextButton = ButtonUtil.createJButton(Constan.RESPAHT + "res/img/next.png", null, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                listService.loadPic(list,start+10);
+                listService.loadPic(folder,list, start + 10);
             }
         });
+        nextButton.setToolTipText("下一页");
         this.add(nextButton);
         this.validate();
     }
