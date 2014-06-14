@@ -2,6 +2,7 @@ package com.wq.ui;
 
 import com.sun.awt.AWTUtilities;
 import com.wq.cache.AllCache;
+import com.wq.cache.FileCacheHelper;
 import com.wq.constans.Constan;
 import com.wq.model.DirMenu;
 import com.wq.model.SysData;
@@ -331,6 +332,12 @@ public class ListPanel extends JPanel implements Page {
                     listService.addTreeData(sFile.getCanonicalPath());
                 }
                 listService.reloadTreeData();
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        FileCacheHelper.asynIndex();
+                    }
+                });
             } catch (IOException e1) {
                 e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }

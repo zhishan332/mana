@@ -57,7 +57,26 @@
                 <configuration>
                     <encoding>UTF-8</encoding>
                 </configuration>
-            </plugin>
+            <executions>
+            <execution>
+                    <id>copy-res</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                        <outputDirectory> ${project.build.directory}/res
+                        </outputDirectory>
+                        <resources>
+                            <resource>
+                                <directory>res</directory>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+        </executions>
+    </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>

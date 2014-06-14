@@ -104,7 +104,7 @@ public class ListServiceImpl implements ListService {
         ViewScrollPanel.getInstance().getVerticalScrollBar().setValue(0);//滚动条设置为0
 //        ViewScrollPanel.getInstance().updateUI();
         VpicFrame.getInstance().repaint();//测试释放内存
-        System.gc();
+//        System.gc();
     }
 
     //    public void loadPic(final List<String> list) {

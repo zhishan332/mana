@@ -11,6 +11,7 @@ import com.wq.service.ListServiceImpl;
 import com.wq.service.SysDataHandler;
 import com.wq.util.ButtonUtil;
 import com.wq.util.FontUtil;
+import com.wq.util.ImageLabelUtil;
 import com.wq.util.ImageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,97 +118,6 @@ public class ViewContentPanel extends JPanel implements Page {
         });
     }
 
-    /**
-     * 处理一般图片
-     *
-     * @param path
-     */
-    private JLabel getImageLabel(final String path,final boolean needCache) {
-        BufferedImage bufferedImage = null;
-
-        boolean isgif = false;
-        Image img = null;
-//        Object cache = ImageCacheManager.getInstance().getCache().get(path);
-        if (path.endsWith(".gif") || path.endsWith(".GIF")) {
-            isgif = true;
-//            if(cache!=null){
-//                img= (Image) cache;
-//                log.info("从缓存中加载："+path);
-//            }else{
-                Toolkit tk = Toolkit.getDefaultToolkit();
-                img = tk.createImage(path);
-//                if(null!=img && needCache) {
-//                    ImageCacheManager.getInstance().getCache().put(path,img);
-//                    log.info("放入缓存："+path);
-//                }
-//            }
-            bufferedImage = ImageUtils.toBufferedImage(img);
-        }else{
-//            if(cache!=null){
-//                bufferedImage= (BufferedImage) cache;
-//                log.info("从缓存中加载："+path);
-//            }else{
-                try {
-                    bufferedImage = ImageIO.read(new FileInputStream(path));
-//                    if(null!=bufferedImage && needCache) {
-//                        ImageCacheManager.getInstance().getCache().put(path,bufferedImage);
-//                        log.info("放入缓存："+path);
-//                    }
-                } catch (Throwable e) {
-                    log.error("读取图片异常", e);
-                }
-//            }
-        }
-        if (bufferedImage == null) return null;
-        final JLabel jLabel = new JLabel();
-        ImageIcon icon = null;
-        if (data.isHMode()) {
-            int maxHeight = AllCache.getInstance().getMaxPicPanelHeight();
-            int imgHeight = bufferedImage.getHeight();
-            //等比缩放
-            if (data.isAutoFit() && imgHeight > maxHeight) {
-                double bo = (double) maxHeight / (double) imgHeight;
-                bo = Math.round(bo * 10000) / 10000.0;
-                bufferedImage = ImageUtils.reduceImg(bufferedImage, bo);
-                icon = new ImageIcon(bufferedImage);
-            } else {
-                if (!isgif) {
-                    icon = new ImageIcon(bufferedImage);
-                } else {
-                    icon = new ImageIcon(img);
-                }
-            }
-        } else {
-            int maxWidth = AllCache.getInstance().getMaxPicPanelWidth();
-            int imgWidth = bufferedImage.getWidth();
-            //等比缩放
-            if (data.isAutoFit() && imgWidth > maxWidth) {
-                double bo = (double) maxWidth / (double) imgWidth;
-                bo = Math.round(bo * 10000) / 10000.0;
-                bufferedImage = ImageUtils.reduceImg(bufferedImage, bo);
-                icon = new ImageIcon(bufferedImage);
-            } else {
-                if (!isgif) {
-                    icon = new ImageIcon(bufferedImage);
-                } else {
-                    icon = new ImageIcon(img);
-                }
-            }
-        }
-        jLabel.setIcon(icon);
-        jLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) != 0
-                        && !e.isControlDown() && !e.isShiftDown()) {
-                    PicMenu.getInstance().show(jLabel, e.getX(), e.getY());
-                    PicMenu.getInstance().setFilePath(path);
-                    PicMenu.getInstance().setjLabel(jLabel);
-                }
-            }
-        });
-       return jLabel;
-    }
 
     public void loadPic(final List<String> list) {
         if (list != null) {
@@ -220,7 +130,6 @@ public class ViewContentPanel extends JPanel implements Page {
                 log.info("命中缓存，缓存修改时间："+cache.getModifyDate()+",当前修改时间："+mdate);
             }
             List<JLabel> labels=new ArrayList<JLabel>();
-            boolean needCache=true;
             if(cache!=null && cache.getModifyDate()==mdate){
                 log.info("从res/cache下加载图片>>>>>>>>>>>>>>>>>>");
                 labels= (List<JLabel>) cache.getObject();
@@ -228,8 +137,7 @@ public class ViewContentPanel extends JPanel implements Page {
                 for (final String path : list) {
                     File file = new File(path);
                     if (!file.exists()) continue;
-//                    if(file.length()>1024*300) needCache=false; //只缓存300K以下的数据
-                    JLabel imgLabel = getImageLabel(path,needCache);
+                    JLabel imgLabel = ImageLabelUtil.getImageLabel(path);
                     if(null!=imgLabel) labels.add(imgLabel);
                 }
                 final FileCacheModel fileCacheModel=new FileCacheModel();

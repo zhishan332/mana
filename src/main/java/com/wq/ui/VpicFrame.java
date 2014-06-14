@@ -83,7 +83,7 @@ public class VpicFrame extends JFrame {
             public void windowClosing(WindowEvent e) {
                 FileUtil.pool.shutdownNow();
                 cacheService.getPool().shutdownNow();
-                FileCacheHelper.deleteSome();
+//                FileCacheHelper.deleteSome();
             }
         });
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//设置关闭操作

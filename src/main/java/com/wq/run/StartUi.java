@@ -2,6 +2,7 @@ package com.wq.run;
 
 import com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel;
 import com.wq.cache.AllCache;
+import com.wq.cache.FileCacheHelper;
 import com.wq.service.SysDataHandler;
 import com.wq.ui.FirstDialog;
 import com.wq.ui.ValidateDialog;
@@ -54,5 +55,7 @@ public class StartUi {
             ValidateDialog dialog = new ValidateDialog();
             dialog.setVisible(true);
         }
+        FileCacheHelper.asynIndex();//异步构建缓存索引
+//        SwingUtilities.invokeLater();
     }
 }

@@ -125,7 +125,6 @@ public class PicMenu extends JPopupMenu implements Page {
                 }
             }
         });
-
         copyItem = new JMenuItem(" 复制");
         copyItem.setFont(FontUtil.getSong12());
         copyItem.addActionListener(new java.awt.event.ActionListener() {

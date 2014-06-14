@@ -2,6 +2,9 @@ package com.wq.cache;
 
 import com.wq.constans.Constan;
 import com.wq.model.FileCacheModel;
+import com.wq.service.CacheService;
+import com.wq.service.CacheServiceImpl;
+import com.wq.util.ImageLabelUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +14,9 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -79,6 +85,72 @@ public class FileCacheHelper {
             File dFile = lists[i];
             log.info("删除多余文件cache:" + dFile.getName());
             dFile.deleteOnExit();
+        }
+    }
+    public static void asynIndex(){
+        ExecutorService pool = Executors.newSingleThreadExecutor();
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                long beg=System.currentTimeMillis();
+                log.info("开始构建缓存>>>>>>>>>>>>");
+                FileCacheHelper.index();//构建缓存索引
+                log.info("构建缓存索引完成>,本次耗时："+(System.currentTimeMillis()-beg));
+            }
+        });
+    }
+
+    public static void index() {
+        CacheService cacheService = CacheServiceImpl.getInstance();
+        Map<String, List<String>> map = cacheService.getAllPic();
+        List<String> validList = new ArrayList<String>();
+        for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+            List<String> list = entry.getValue();
+            for (int i = 0; i < list.size(); i += 10) {
+                long hashcode = indexImageLabel(entry.getKey(), list, i);
+                String newName = String.valueOf(hashcode);
+                validList.add(cachePath + newName + suffix);
+            }
+        }
+        deleteDirty(validList);
+    }
+
+    private static long indexImageLabel(String folder, List<String> list, int start) {
+        List<String> tempList = new ArrayList<String>();
+        for (int i = start; i < list.size() && i < start + 10; i++) {
+            tempList.add(list.get(i));
+        }
+        File folderFile = new File(folder);
+        final long mdate = folderFile.lastModified();
+        final long hashCode = tempList.hashCode();
+        String newName = String.valueOf(hashCode);
+        File ff = new File(cachePath + newName + suffix);
+        if (ff.exists()) return hashCode;
+        List<JLabel> labels = new ArrayList<JLabel>();
+        for (String path : tempList) {
+            JLabel imgLabel = ImageLabelUtil.getImageLabel(path);
+            labels.add(imgLabel);
+        }
+        if (!labels.isEmpty()) {
+            final FileCacheModel fileCacheModel = new FileCacheModel();
+            fileCacheModel.setModifyDate(mdate);
+            fileCacheModel.setObject(labels);
+            FileCacheHelper.save(fileCacheModel, hashCode);
+        }
+        return hashCode;
+    }
+    //删除无用的缓存
+    private static void deleteDirty(List<String> validList) {
+        File cf = new File(cachePath);
+        File[] files = cf.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                String name = file.getName();
+                if (!validList.contains(name)) {
+                    log.info("删除无用缓存文件："+file.getName());
+                    file.deleteOnExit();
+                }
+            }
         }
     }
 

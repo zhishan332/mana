@@ -10,7 +10,7 @@ import java.awt.*;
  * 系统常量
  */
 public class Constan {
-   public static final String DBPATH = "res/vs.d";
+    public static final String DBPATH = "res/vs.d";
     public static final String LOGPATH = "res/log.txt";
     public static final String RESPAHT = "";
     public static final String CACHEPATH = "res/cache/";
