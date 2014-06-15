@@ -56,11 +56,11 @@ public class VpicFrame extends JFrame {
      */
     public void constructStyle() {
         // 注册全局快捷键
-        ShortcutManager.getInstance().addShortcutListener(new ShortcutManager.ShortcutListener() {
-            public void handle() {
-                //TODO System.out.println("Meta + I");
-            }
-        }, KeyEvent.VK_CONTROL, KeyEvent.VK_S);
+//        ShortcutManager.getInstance().addShortcutListener(new ShortcutManager.ShortcutListener() {
+//            public void handle() {
+//                //TODO System.out.println("Meta + I");
+//            }
+//        }, KeyEvent.VK_CONTROL, KeyEvent.VK_S);
     }
 
     /**

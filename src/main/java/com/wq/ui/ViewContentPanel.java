@@ -84,6 +84,10 @@ public class ViewContentPanel extends JPanel implements Page {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                if(list==null){
+                    log.warn("图片list为空");
+                    return;
+                }
                 long beg=System.currentTimeMillis();
                 List<String> loadList=new ArrayList<String>();
                 for(int i=start;i<list.size()&&i<start+10;i++){

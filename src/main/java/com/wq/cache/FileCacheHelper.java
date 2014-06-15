@@ -30,33 +30,57 @@ import java.util.zip.GZIPOutputStream;
 public class FileCacheHelper {
     private static final Logger log = LoggerFactory.getLogger(FileCacheHelper.class);
     private static String cachePath = Constan.CACHEPATH;
-    private static String suffix = ".mec";
+    private static String suffix = ".dat";
+    private static int BUFFER=1024*10;
 
     public static void save(FileCacheModel fileCacheModel, long hashcode) {
-
         ObjectOutputStream out = null;
         try {
             String newName = String.valueOf(hashcode);
             File ff = new File(cachePath + newName + suffix);
             if (!ff.exists()) {
-                log.info("创建缓存文件：" + ff.getName());
                 boolean isSuc = ff.createNewFile();
                 if (!isSuc) {
                     log.info("创建缓存文件失败..........");
                     return;
                 }
             }
+            log.info("创建缓存文件：" + ff.getName());
+            BufferedOutputStream  dest= new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(ff)),BUFFER);
+            out = new ObjectOutputStream(dest);
+            out.writeObject(fileCacheModel);
+            out.flush();
+            out.close();
+            dest.close();
+        } catch (IOException e) {
+            log.error("缓存图片异常", e);
+        }
+    }
+    public static void save2(FileCacheModel fileCacheModel, long hashcode) {
+        ObjectOutputStream out = null;
+        try {
+            String newName = String.valueOf(hashcode);
+            File ff = new File(cachePath + newName + suffix);
+            if (!ff.exists()) {
+                boolean isSuc = ff.createNewFile();
+                if (!isSuc) {
+                    log.info("创建缓存文件失败..........");
+                    return;
+                }
+            }
+            log.info("创建缓存文件：" + ff.getName());
             GZIPOutputStream gos = new GZIPOutputStream(new FileOutputStream(ff));
+//            BufferedOutputStream  dest= new BufferedOutputStream(gos, BUFFER);
             out = new ObjectOutputStream(gos);
             out.writeObject(fileCacheModel);
             out.flush();
             out.close();
             gos.close();
+//            dest.close();
         } catch (IOException e) {
             log.error("缓存图片异常", e);
         }
     }
-
     public static FileCacheModel get(long hashcode) {
         ObjectInputStream in = null;
         FileCacheModel data = null;
@@ -64,11 +88,11 @@ public class FileCacheHelper {
             String newName = String.valueOf(hashcode);
             File ff = new File(cachePath + newName + suffix);
             if (!ff.exists()) return null;
-            GZIPInputStream gis = new GZIPInputStream(new FileInputStream(ff));
-            in = new ObjectInputStream(gis);
+            BufferedInputStream dest = new BufferedInputStream(new GZIPInputStream(new FileInputStream(ff)), BUFFER);
+            in = new ObjectInputStream(dest);
             data = (FileCacheModel) in.readObject();
             in.close();
-            gis.close();
+            dest.close();
         } catch (IOException e) {
             log.error("缓存图片异常", e);
         } catch (ClassNotFoundException e) {
@@ -76,7 +100,23 @@ public class FileCacheHelper {
         }
         return data;
     }
-
+    public static FileCacheModel get2(long hashcode) {
+        ObjectInputStream in = null;
+        FileCacheModel data = null;
+        try {
+            String newName = String.valueOf(hashcode);
+            File ff = new File(cachePath + newName + suffix);
+            if (!ff.exists()) return null;
+            in = new ObjectInputStream(new GZIPInputStream(new FileInputStream(ff)));
+            data = (FileCacheModel) in.readObject();
+            in.close();
+        } catch (IOException e) {
+            log.error("缓存图片异常", e);
+        } catch (ClassNotFoundException e) {
+            log.error("缓存图片异常", e);
+        }
+        return data;
+    }
     public static void deleteSome() {
         File ff = new File(cachePath);
         File[] lists = ff.listFiles();
@@ -107,7 +147,10 @@ public class FileCacheHelper {
         for (Map.Entry<String, List<String>> entry : map.entrySet()) {
             List<String> list = entry.getValue();
             for (int i = 0; i < list.size(); i += 10) {
+                long beg=System.currentTimeMillis();
                 long hashcode = indexImageLabel(entry.getKey(), list, i);
+                long end=System.currentTimeMillis();
+                log.info(hashcode+suffix+"构建耗时："+(end-beg)+"ms");
                 String newName = String.valueOf(hashcode);
                 validList.add(cachePath + newName + suffix);
             }
@@ -157,18 +200,23 @@ public class FileCacheHelper {
     public static void main(String[] args) throws Exception {
         File ff = new File("F:\\Image\\tem");
         File[] list = ff.listFiles();
-        List<ImageIcon> clist = new ArrayList<ImageIcon>();
+        List<JLabel> clist = new ArrayList<JLabel>();
         int i = 0;
         for (File f1 : list) {
             if (i >= 10) break;
-            BufferedImage bufferedImage = ImageIO.read(new FileInputStream(f1));
-            ImageIcon dd = new ImageIcon(bufferedImage);
-            clist.add(dd);
+            JLabel imgLabel = ImageLabelUtil.getImageLabel(f1.getAbsolutePath());
+            clist.add(imgLabel);
             i++;
         }
         FileCacheModel mod = new FileCacheModel();
         mod.setModifyDate(1231231231);
         mod.setObject(clist);
-        FileCacheHelper.save(mod, 1212);
+        long beg=System.currentTimeMillis();
+        FileCacheHelper.save(mod, 1111111111);
+        long end=System.currentTimeMillis();
+        System.out.println(end-beg);
+        FileCacheHelper.get(1111111111);
+        long end2=System.currentTimeMillis();
+        System.out.println(end2-end);
     }
 }
