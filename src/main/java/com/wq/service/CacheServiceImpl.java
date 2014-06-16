@@ -29,6 +29,11 @@ public class CacheServiceImpl implements CacheService {
     }
 
     private CacheServiceImpl() {
+        makeNodeList();
+    }
+
+    private void makeNodeList() {
+        nodeList.clear();
         Set<String> list = systemCache.getData().getFileList();
         for (String filePath : list) {
             File fileTemp = new File(filePath);
@@ -50,10 +55,6 @@ public class CacheServiceImpl implements CacheService {
         if (files != null) {
             for (final File file1 : files) {
                 if (file1.isDirectory() && openEmptyFolder(file1)) {
-//                    DefaultMutableTreeNode node = getNode(file1);
-//                    if (node != null) {
-//                        rootNode.add(node);
-//                    }
                     pool.execute(new Runnable() {
                         public void run() {
                             DefaultMutableTreeNode node = getNode(file1);
@@ -74,10 +75,7 @@ public class CacheServiceImpl implements CacheService {
     }
 
     private boolean openEmptyFolder(File file) {
-        if (systemCache.getData().isIgnoreEmptyFolder()) {
-            return FileUtil.getFileSize(file) > 0;
-        }
-        return true;
+        return !systemCache.getData().isIgnoreEmptyFolder() || FileUtil.getFileSize(file) > 0;
     }
 
     @Override
@@ -88,6 +86,7 @@ public class CacheServiceImpl implements CacheService {
         final FileFilter fileFilter = new FileFilter(typeList); //文件的后缀名
         for (String filePath : list) {
             File fileTemp = new File(filePath);
+            makeNodeList();
             if (!fileTemp.exists()) continue;
             Map<String, List<String>> temMap = new RecursiveTravelPerf().scan(filePath, fileFilter);
             if (temMap != null) {

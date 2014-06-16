@@ -2,6 +2,7 @@ package com.wq.ui;
 
 import com.wq.cache.SystemCache;
 import com.wq.constans.Constan;
+import com.wq.ui.module.FolderChooser;
 import com.wq.util.FontUtil;
 
 import javax.swing.*;
@@ -53,7 +54,7 @@ public class FirstDialog extends JDialog implements Page {
         chBtn.setBounds(30, 25, 200, 50);
         chBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ListPanel.getInstance().chooseFile();
+                new FolderChooser();
                 FirstDialog.getInstance().dispose();
             }
         });

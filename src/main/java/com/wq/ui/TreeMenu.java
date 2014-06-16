@@ -8,10 +8,11 @@ import com.wq.ui.module.FolderChooser;
 import com.wq.util.FileUtil;
 import com.wq.util.FontUtil;
 import com.wq.util.MesBox;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -25,38 +26,33 @@ import java.io.IOException;
  * To change this template use File | Settings | File Templates.
  */
 public class TreeMenu extends JPopupMenu implements Page {
-    private static TreeMenu treeMenu = null;
+    private static final Logger log = LoggerFactory.getLogger(TreeMenu.class);
     private String filePath;
     private ListService listService = ListServiceImpl.getInstance();
-    private TreeMenu() {
+
+    public TreeMenu() {
+        constructPlate();
+        constructPage();
+    }
+    public TreeMenu(String filePath) {
+        this.filePath=filePath;
         constructPlate();
         constructPage();
     }
 
-    public static TreeMenu getInstance() {
-        if (treeMenu == null) {
-            treeMenu = new TreeMenu();
-        }
-        return treeMenu;
-    }
-
     @Override
     public void constructPlate() {
-        this.setSize(180, 130);
-        this.setPreferredSize(new Dimension(180, 130));
+        if (filePath != null) {
+            this.setSize(180, 130);
+            this.setPreferredSize(new Dimension(180, 130));
+        } else {
+            this.setSize(180, 40);
+            this.setPreferredSize(new Dimension(180, 40));
+        }
     }
 
     @Override
     public void constructPage() {
-        JMenuItem addItem = new JMenuItem("添加文件夹", new ImageIcon(Constan.RESPAHT + "res/img/add.png"));
-        addItem.setFont(FontUtil.getDefault());
-        addItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (MesBox.confirm("确定删除吗")) {
-                    new FolderChooser();
-                }
-            }
-        });
         JMenuItem delItem = new JMenuItem("移除文件夹", new ImageIcon(Constan.RESPAHT + "res/img/fuckdel.png"));
         delItem.setFont(FontUtil.getDefault());
         delItem.addActionListener(new java.awt.event.ActionListener() {
@@ -96,25 +92,19 @@ public class TreeMenu extends JPopupMenu implements Page {
                 try {
                     java.awt.Desktop.getDesktop().open(new File(getFilePath()));
                 } catch (IOException exp) {
-                    // TODO Auto-generated catch block
-                    exp.printStackTrace();
+                    log.error("进入文件目录失败", exp);
                 }
             }
         });
-        this.add(addItem);
-        this.add(fireItem);
-        this.add(delItem);
-        this.add(new JPopupMenu.Separator());
-        this.add(delDiskItem);
+        if (filePath != null) {
+            this.add(fireItem);
+            this.add(delItem);
+            this.add(new JPopupMenu.Separator());
+            this.add(delDiskItem);
+        }
     }
+
     public String getFilePath() {
         return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
-    public void setTreePath(TreePath treePath) {
     }
 }

@@ -1,6 +1,7 @@
 package com.wq.ui;
 
 import com.wq.cache.AllCache;
+import com.wq.cache.FileCacheHelper;
 import com.wq.constans.Constan;
 import com.wq.service.CacheService;
 import com.wq.service.CacheServiceImpl;
@@ -80,7 +81,6 @@ public class VpicFrame extends JFrame {
             public void windowClosing(WindowEvent e) {
                 FileUtil.pool.shutdownNow();
                 cacheService.getPool().shutdownNow();
-//                FileCacheHelper.deleteSome();
             }
         });
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//设置关闭操作

@@ -4,6 +4,7 @@ import com.wq.cache.SystemCache;
 import com.wq.constans.Constan;
 import com.wq.service.ListService;
 import com.wq.service.ListServiceImpl;
+import com.wq.util.FontUtil;
 import com.wq.util.MD5Util;
 import com.wq.util.MesBox;
 import com.wq.util.SwingUtils;
@@ -22,10 +23,9 @@ import java.awt.event.WindowEvent;
  * Time: 11:25
  * To change this template use File | Settings | File Templates.
  */
-public class ValidateDialog extends JDialog {
+public class ValidateDialog extends JFrame {
     private JPasswordField jf;
     private ValidateDialog vd;
-    private static ListService listService = ListServiceImpl.getInstance();
 
     public ValidateDialog() {
         this.addWindowFocusListener(new WindowAdapter() {
@@ -33,20 +33,23 @@ public class ValidateDialog extends JDialog {
                 e.getWindow().toFront();
             }
         });
-        this.setSize(new Dimension(290, 100));
-        this.setTitle("软件已加密");
+        this.setSize(new Dimension(320, 160));
+        this.setTitle("Mana已被加密");
+        this.setFont(FontUtil.getDefault());
         this.setLocationRelativeTo(null);
         Toolkit tk = Toolkit.getDefaultToolkit();
         Image mImage = tk.createImage(Constan.RESPAHT+ "res/img/logo.png");
         setIconImage(mImage);
         Container con = this.getContentPane();
         con.setLayout(null);
-        JLabel lu = new JLabel("密码：", JLabel.RIGHT);
-        lu.setBounds(10, 10, 50, 28);
+        JLabel lu = new JLabel("密 码：", JLabel.RIGHT);
+        lu.setBounds(10, 30, 50, 28);
+        lu.setFont(FontUtil.getWei(13));
         jf = new JPasswordField();
-        jf.setBounds(70, 10, 120, 28);
-        JButton jb = new JButton("提交");
-        jb.setBounds(200, 10, 60, 28);
+        jf.setBounds(70, 30, 160, 28);
+        JButton jb = new JButton("进 入");
+        jb.setBounds(240, 25, 60, 35);
+        jb.setFont(FontUtil.getWei(13));
         vd = this;
         jb.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -56,12 +59,12 @@ public class ValidateDialog extends JDialog {
                     vpic.setVisible(true);
                     vd.setVisible(false);
                     vd.dispose();
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            listService.reloadTreeData(); //页面展开后刷新一下TREE，在JSplitPane作用下，不刷新，无法显示JTree
-                        }
-                    });
+//                    SwingUtilities.invokeLater(new Runnable() {
+//                        @Override
+//                        public void run() {
+////                            listService.reloadTreeData(); //页面展开后刷新一下TREE，在JSplitPane作用下，不刷新，无法显示JTree
+//                        }
+//                    });
                 } else {
                     MesBox.comAlert("密码错误，请重试或者重新安装本软件");
                 }
@@ -77,12 +80,12 @@ public class ValidateDialog extends JDialog {
                     vpic.setVisible(true);
                     vd.setVisible(false);
                     vd.dispose();
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            listService.reloadTreeData(); //页面展开后刷新一下TREE，在JSplitPane作用下，不刷新，无法显示JTree
-                        }
-                    });
+//                    SwingUtilities.invokeLater(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            listService.reloadTreeData(); //页面展开后刷新一下TREE，在JSplitPane作用下，不刷新，无法显示JTree
+//                        }
+//                    });
                 } else {
                     MesBox.comAlert("密码错误，请重试或者重新安装本软件。");
                 }
@@ -91,10 +94,11 @@ public class ValidateDialog extends JDialog {
         con.add(lu);
         con.add(jf);
         con.add(jb);
-        this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 dispose();
+                System.exit(1);
             }
         });
     }

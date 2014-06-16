@@ -2,6 +2,7 @@ package com.wq.ui;
 
 import com.sun.awt.AWTUtilities;
 import com.wq.cache.AllCache;
+import com.wq.cache.FileCacheHelper;
 import com.wq.cache.SystemCache;
 import com.wq.constans.Constan;
 import com.wq.model.DirMenu;
@@ -9,6 +10,7 @@ import com.wq.service.CacheService;
 import com.wq.service.CacheServiceImpl;
 import com.wq.service.ListService;
 import com.wq.service.ListServiceImpl;
+import com.wq.ui.module.FolderChooser;
 import com.wq.util.FontUtil;
 import com.wq.util.JTreeUtil;
 import org.slf4j.Logger;
@@ -65,9 +67,9 @@ public class ListPanel extends JPanel implements Page {
 
     public void constructPlate() {
         this.setLayout(new BorderLayout());
-        this.setPreferredSize(new Dimension(200, 1000));
-        this.setSize(new Dimension(200, 1000));
-        this.setMinimumSize(new Dimension(200, 1000));
+        this.setPreferredSize(new Dimension(260, 1000));
+        this.setSize(new Dimension(260, 1000));
+        this.setMinimumSize(new Dimension(260, 1000));
         Timer timer = new Timer(2000, new ActionListener() {
             public void actionPerformed(ActionEvent actionevent) {
                 memoryPanel.repaint();
@@ -80,6 +82,15 @@ public class ListPanel extends JPanel implements Page {
         JToolBar toolBar = new JToolBar();
         toolBar.setFloatable(false);
         toolBar.setBorderPainted(false); //不画边界
+        JButton addBtn = new JButton("添加",new ImageIcon(Constan.RESPAHT + "res/img/add.png"));
+        addBtn.setToolTipText("添加文件夹");
+        addBtn.setFont(FontUtil.getDefault());
+        addBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new FolderChooser();
+            }
+        });
+
         JButton setBtn = new JButton("设置",new ImageIcon(Constan.RESPAHT + "res/img/set.png"));
         setBtn.setToolTipText("设置");
         setBtn.setFont(FontUtil.getDefault());
@@ -152,11 +163,23 @@ public class ListPanel extends JPanel implements Page {
         reBtn.setFont(FontUtil.getDefault());
         reBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                listService.reloadTreeData();
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) ListPanel.getInstance().getTree().getLastSelectedPathComponent(); //返回最后选中的结点
                 if (node != null) {
                     lastTreePath = new TreePath(node);
                 }
-                listService.reloadTreeData();
+            }
+        });
+        JButton clBtn = new JButton("清理",new ImageIcon(Constan.RESPAHT + "res/img/rub.png"));
+        clBtn.setToolTipText("清理缓存文件夹，删除过期缓存");
+        clBtn.setFont(FontUtil.getDefault());
+        clBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        FileCacheHelper.deleteDirty();
+                    }
+                });
             }
         });
         JButton aboutBtn = new JButton("关于",new ImageIcon(Constan.RESPAHT + "res/img/help.png"));
@@ -185,8 +208,10 @@ public class ListPanel extends JPanel implements Page {
             }
         });
 //        toolBar.putClientProperty(Options.HEADER_STYLE_KEY, HeaderStyle.BOTH);
+        toolBar.add(addBtn);
         toolBar.add(setBtn);
         toolBar.add(reBtn);
+        toolBar.add(clBtn);
         toolBar.add(aboutBtn);
         toolBar.add(Box.createHorizontalGlue());
         toolBar.add(hideBtn);
@@ -228,7 +253,7 @@ public class ListPanel extends JPanel implements Page {
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                            listService.loadPic(dirMenu.getFilePath(),list,0);
+                            listService.loadPic(dirMenu.getFilePath(), list, 0);
                         }
                     });
                 }
@@ -252,9 +277,7 @@ public class ListPanel extends JPanel implements Page {
                         return;
                     }
                     if (!"所有分类".equals(dirMenu.getName()) && flag == 0) {//根节点无反应
-                        TreeMenu.getInstance().setFilePath(dirMenu.getFilePath());
-                        TreeMenu.getInstance().setTreePath(path);
-                        TreeMenu.getInstance().show(tree, e.getX(), e.getY());
+                        new TreeMenu(dirMenu.getFilePath()).show(tree, e.getX(), e.getY());
                     }
                 }
             }
@@ -297,9 +320,10 @@ public class ListPanel extends JPanel implements Page {
                     model.insertNodeInto(list.get(n), chosen, n);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("getTreeData异常", e);
             }
         } else {  //刷新时
+            log.debug("刷新左侧树.................");
             root.removeAllChildren();
             DefaultTreeModel models = new DefaultTreeModel(root);
             tree.setModel(models);    //关联TreeModel
@@ -313,7 +337,7 @@ public class ListPanel extends JPanel implements Page {
                     models.insertNodeInto(list.get(n), chosen, n);
                 }
             } catch (IOException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                log.error("getTreeData异常",e);
             }
         }
     }

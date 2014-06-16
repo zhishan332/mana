@@ -15,8 +15,6 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class JTreeUtil {
-    private static List list = new ArrayList();
-    private boolean flag = true;
 
     /**
      * 完全展开一个JTree

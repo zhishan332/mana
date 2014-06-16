@@ -8,6 +8,8 @@ import com.wq.ui.ViewScrollPanel;
 import com.wq.ui.VpicFrame;
 import com.wq.util.JTreeUtil;
 import com.wq.util.LightLog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.tree.TreePath;
 import java.io.IOException;
@@ -22,9 +24,8 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class ListServiceImpl implements ListService {
+    private static final Logger log = LoggerFactory.getLogger(ListServiceImpl.class);
     private static ListServiceImpl ourInstance = new ListServiceImpl();
-    private CacheService cacheService = CacheServiceImpl.getInstance();
-    private static LightLog logger = LightLog.getInstance(ListServiceImpl.class);
     private SystemCache handler = SystemCache.getInstance();
 
     public static ListServiceImpl getInstance() {
@@ -52,20 +53,13 @@ public class ListServiceImpl implements ListService {
         try {
             AllCache.getInstance().reloadListCache();
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            log.error("reloadListCache失败",e);
         }
         ListPanel.getInstance().loadTreeModel();
         ListPanel.getInstance().getTree().updateUI();
         JTreeUtil.expandTree(ListPanel.getInstance().getTree(), SystemCache.getInstance().getData().isExpland());  //展开所有子节点
         ViewScrollPanel.getInstance().getVerticalScrollBar().setValue(1);//滚动条设置为0
-        Map<String, List<String>> map = AllCache.getInstance().getMenu();
-        if (map != null && map.size() > 0) {
-            for (Map.Entry<String, java.util.List<String>> entry : map.entrySet()) {
-                List<String> list = entry.getValue();
-                loadPic(entry.getKey(),list,0);
-                break;
-            }
-        } else loadPic(null,null,0);
+        loadPic(null,null,0);
         Map<String, java.util.List<String>> map2 = AllCache.getInstance().getMenu();
         if (map2 != null) {
             for (Map.Entry<String, java.util.List<String>> entry : map2.entrySet()) {

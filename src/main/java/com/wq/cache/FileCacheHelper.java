@@ -146,19 +146,22 @@ public class FileCacheHelper {
     public static void index() {
         CacheService cacheService = CacheServiceImpl.getInstance();
         Map<String, List<String>> map = cacheService.getAllPic();
-        List<String> validList = new ArrayList<String>();
-        for (Map.Entry<String, List<String>> entry : map.entrySet()) {
-            List<String> list = entry.getValue();
+        ExecutorService pool = Executors.newFixedThreadPool(2);
+        for (final Map.Entry<String, List<String>> entry : map.entrySet()) {
+            final List<String> list = entry.getValue();
             for (int i = 0; i < list.size(); i += 10) {
-                long beg = System.currentTimeMillis();
-                long hashcode = indexImageLabel(entry.getKey(), list, i);
-                long end = System.currentTimeMillis();
-                log.info(hashcode + suffix + "构建耗时：" + (end - beg) + "ms");
-                String newName = String.valueOf(hashcode);
-                validList.add(cachePath + newName + suffix);
+                final int st=i;
+                pool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        final long beg = System.currentTimeMillis();
+                        long hashcode = indexImageLabel(entry.getKey(), list, st);
+                        long end = System.currentTimeMillis();
+                        log.info(hashcode + suffix + "构建耗时：" + (end - beg) + "ms");
+                    }
+                });
             }
         }
-        deleteDirty(validList);
     }
 
     private static long indexImageLabel(String folder, List<String> list, int start) {
@@ -187,18 +190,36 @@ public class FileCacheHelper {
     }
 
     //删除无用的缓存
-    private static void deleteDirty(List<String> validList) {
+    public static void deleteDirty() {
+        List<String> validList = new ArrayList<String>();
+        Map<String, List<String>> map = CacheServiceImpl.getInstance().getAllPic();
+        for (final Map.Entry<String, List<String>> entry : map.entrySet()) {
+            final List<String> list = entry.getValue();
+            for (int i = 0; i < list.size(); i += 10) {
+                List<String> tempList = new ArrayList<String>();
+                for (int t = i; t < list.size() && t < i + 10; t++) {
+                    tempList.add(list.get(i));
+                }
+                long hashcode = tempList.hashCode();
+                String newName = String.valueOf(hashcode);
+                validList.add(newName + suffix);
+            }
+        }
         File cf = new File(cachePath);
         File[] files = cf.listFiles();
+        int i=0;
         if (files != null) {
             for (File file : files) {
                 String name = file.getName();
+                log.debug("validList:"+validList.size()+",filename:"+name);
                 if (!validList.contains(name)) {
-                    log.info("删除无用缓存文件：" + file.getName());
                     file.deleteOnExit();
+                    log.info("删除无用缓存文件：" + file.getName());
+                    i++;
                 }
             }
         }
+        log.info("清理缓存文件完成,删除缓存个数："+i);
     }
 
     public static void main(String[] args) throws Exception {

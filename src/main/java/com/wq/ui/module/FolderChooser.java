@@ -44,10 +44,11 @@ public class FolderChooser extends JFileChooser {
         int index = this.showDialog(VpicFrame.getInstance(), "确定");
         if (index == JFileChooser.APPROVE_OPTION) {
             try {
+                File[] files = this.getSelectedFiles();
+                if(files==null || files.length==0 ) return;
                 SystemCache.getInstance().getData().
                         setLastOpenPath(this.getCurrentDirectory().getCanonicalPath());
                 SystemCache.getInstance().update();
-                File[] files = this.getSelectedFiles();
                 for (File sFile : files) {
                     ListServiceImpl.getInstance().addTreeData(sFile.getCanonicalPath());
                 }

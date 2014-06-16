@@ -33,7 +33,9 @@ public class FontUtil {
     public static Font getWei12() {
         return new Font("微软雅黑", Font.PLAIN, 12);
     }
-
+    public static Font getWei(int size) {
+        return new Font("微软雅黑", Font.PLAIN, size);
+    }
     public static Font getArial13() {
         return new Font("Aria", Font.PLAIN, 13);
     }
