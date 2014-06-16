@@ -29,6 +29,16 @@ public class CacheServiceImpl implements CacheService {
     }
 
     private CacheServiceImpl() {
+        Set<String> list = systemCache.getData().getFileList();
+        for (String filePath : list) {
+            File fileTemp = new File(filePath);
+            if (fileTemp.isDirectory() && openEmptyFolder(fileTemp)) {
+                DefaultMutableTreeNode node = getNode(fileTemp);
+                if (node != null) {
+                    nodeList.add(node);
+                }
+            }
+        }
     }
 
     private DefaultMutableTreeNode getNode(File file) {
@@ -78,12 +88,6 @@ public class CacheServiceImpl implements CacheService {
         final FileFilter fileFilter = new FileFilter(typeList); //文件的后缀名
         for (String filePath : list) {
             File fileTemp = new File(filePath);
-            if (fileTemp.isDirectory() && openEmptyFolder(fileTemp)) {
-                DefaultMutableTreeNode node = getNode(fileTemp);
-                if (node != null) {
-                    nodeList.add(node);
-                }
-            }
             if (!fileTemp.exists()) continue;
             Map<String, List<String>> temMap = new RecursiveTravelPerf().scan(filePath, fileFilter);
             if (temMap != null) {
