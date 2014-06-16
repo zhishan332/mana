@@ -2,12 +2,15 @@ package com.wq.ui;
 
 import com.sun.awt.AWTUtilities;
 import com.wq.cache.AllCache;
-import com.wq.cache.FileCacheHelper;
+import com.wq.cache.SystemCache;
 import com.wq.constans.Constan;
 import com.wq.model.DirMenu;
-import com.wq.model.SysData;
-import com.wq.service.*;
-import com.wq.util.*;
+import com.wq.service.CacheService;
+import com.wq.service.CacheServiceImpl;
+import com.wq.service.ListService;
+import com.wq.service.ListServiceImpl;
+import com.wq.util.FontUtil;
+import com.wq.util.JTreeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +25,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +49,6 @@ public class ListPanel extends JPanel implements Page {
     //    private static LightLog logger = LightLog.getInstance(ListPanel.class);
     private int flag = 0;//标志位，防止树被选中后自动加载图片
     private final MemoryPanel memoryPanel = new MemoryPanel();
-    private SysDataHandler dataHandler = SysDataHandler.getInstance();
     private TreePath lastTreePath;
 
     private ListPanel() {
@@ -79,52 +80,12 @@ public class ListPanel extends JPanel implements Page {
         JToolBar toolBar = new JToolBar();
         toolBar.setFloatable(false);
         toolBar.setBorderPainted(false); //不画边界
-        JButton addBtn = new JButton(new ImageIcon(Constan.RESPAHT + "res/img/add.png"));
-        addBtn.setToolTipText("增加文件夹映射");
-        addBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                chooseFile();
-            }
-        });
-        JButton delBtn = new JButton(new ImageIcon(Constan.RESPAHT + "res/img/fuckdel.png"));
-        delBtn.setToolTipText("删除文件夹映射");
-        delBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (tree.getLastSelectedPathComponent() == null) {
-                    MesBox.warn("请选择要删除的映射文件夹");
-                    return;
-                }
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-                if (node.getLevel() != 1) {
-                    MesBox.warn("您只能删除映射文件夹");
-                } else {
-                    DirMenu dirMenu = (DirMenu) node.getUserObject();//获得这个结点的名称
-                    String path = dirMenu.getFilePath();
-                    listService.delTreeData(path);
-                    listService.reloadTreeData();
-                }
-            }
-        });
-        JButton fireBtn = new JButton(new ImageIcon(Constan.RESPAHT + "res/img/fire.png"));
-        fireBtn.setToolTipText("命中");
-        fireBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-                if(node==null) return;
-                DirMenu dirMenu = (DirMenu) node.getUserObject();//获得这个结点的名称
-                String path = dirMenu.getFilePath();
-                try {
-                    java.awt.Desktop.getDesktop().open(new File(path));
-                } catch (IOException exp) {
-                    log.error("打开文件夹失败",exp);
-                }
-            }
-        });
-        JButton setBtn = new JButton(new ImageIcon(Constan.RESPAHT + "res/img/set.png"));
+        JButton setBtn = new JButton("设置",new ImageIcon(Constan.RESPAHT + "res/img/set.png"));
         setBtn.setToolTipText("设置");
+        setBtn.setFont(FontUtil.getDefault());
         setBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SysData data = SysDataHandler.getInstance().getData();
+                com.wq.model.SysData data = SystemCache.getInstance().getData();
                 SetPanel setPanel = SetPanel.getInstance();
                 setPanel.getSpeed().setText(String.valueOf(data.getSpeed()));
                 setPanel.getSavePath().setText(data.getSavePath());
@@ -175,30 +136,31 @@ public class ListPanel extends JPanel implements Page {
                 setPanel.setVisible(true);
             }
         });
-        JButton ctBtn = new JButton(new ImageIcon(Constan.RESPAHT + "res/img/catch.png"));
-        ctBtn.setToolTipText("网页取图");
-        ctBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                FetchImgPanel.getInstance().getWidthField().setText(String.valueOf(SysDataHandler.getInstance().getData().getFetchMinWidth()));
-                FetchImgPanel.getInstance().getHeigthField().setText(String.valueOf(SysDataHandler.getInstance().getData().getFetchMinHeight()));
-                FetchImgPanel.getInstance().getDepField().setText(String.valueOf(SysDataHandler.getInstance().getData().getFetchDeep()));
-                FetchImgPanel.getInstance().getAddBox().setSelected(SysDataHandler.getInstance().getData().isFetchToMana());
-                FetchImgPanel.getInstance().setVisible(true);
-            }
-        });
-        JButton reBtn = new JButton(new ImageIcon(Constan.RESPAHT + "res/img/refresh.gif"));
+//        JButton ctBtn = new JButton(new ImageIcon(Constan.RESPAHT + "res/img/catch.png"));
+//        ctBtn.setToolTipText("网页取图");
+//        ctBtn.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                FetchImgPanel.getInstance().getWidthField().setText(String.valueOf(SystemCache.getInstance().getData().getFetchMinWidth()));
+//                FetchImgPanel.getInstance().getHeigthField().setText(String.valueOf(SystemCache.getInstance().getData().getFetchMinHeight()));
+//                FetchImgPanel.getInstance().getDepField().setText(String.valueOf(SystemCache.getInstance().getData().getFetchDeep()));
+//                FetchImgPanel.getInstance().getAddBox().setSelected(SystemCache.getInstance().getData().isFetchToMana());
+//                FetchImgPanel.getInstance().setVisible(true);
+//            }
+//        });
+        JButton reBtn = new JButton("刷新",new ImageIcon(Constan.RESPAHT + "res/img/refresh.gif"));
         reBtn.setToolTipText("刷新文件夹");
+        reBtn.setFont(FontUtil.getDefault());
         reBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) ListPanel.getInstance().getTree().getLastSelectedPathComponent(); //返回最后选中的结点
                 if (node != null) {
-                    TreePath path = new TreePath(node);
-                    lastTreePath = path;
+                    lastTreePath = new TreePath(node);
                 }
                 listService.reloadTreeData();
             }
         });
-        JButton aboutBtn = new JButton(new ImageIcon(Constan.RESPAHT + "res/img/help.png"));
+        JButton aboutBtn = new JButton("关于",new ImageIcon(Constan.RESPAHT + "res/img/help.png"));
+        aboutBtn.setFont(FontUtil.getDefault());
         aboutBtn.setToolTipText("关于");
         aboutBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -223,10 +185,6 @@ public class ListPanel extends JPanel implements Page {
             }
         });
 //        toolBar.putClientProperty(Options.HEADER_STYLE_KEY, HeaderStyle.BOTH);
-        toolBar.add(addBtn);
-        toolBar.add(delBtn);
-        toolBar.add(fireBtn);
-        toolBar.add(ctBtn);
         toolBar.add(setBtn);
         toolBar.add(reBtn);
         toolBar.add(aboutBtn);
@@ -236,14 +194,14 @@ public class ListPanel extends JPanel implements Page {
         root = new DefaultMutableTreeNode("全部");
         //根节点进行初始化
         tree = new JTree(root);
-        tree.setFont(FontUtil.getArial12());
+        tree.setFont(FontUtil.getDefault());
         tree.setRootVisible(false);//根节点不可见
 //        tree.setUI(new BasicTreeUI());
         //树进行初始化，其数据来源是root对象
         listPanelContainer = new JScrollPane(tree);
         //把滚动面板添加到Trees中
         loadTreeModel();//加载树形数据
-        JTreeUtil.expandTree(tree, SysDataHandler.getInstance().getData().isExpland());  //展开所有子节点
+        JTreeUtil.expandTree(tree, SystemCache.getInstance().getData().isExpland());  //展开所有子节点
         tree.validate();
         tree.addTreeSelectionListener(new TreeSelectionListener() {
             public void valueChanged(TreeSelectionEvent evt) {
@@ -308,42 +266,6 @@ public class ListPanel extends JPanel implements Page {
         this.add("Center", listPanelContainer);
     }
 
-    public void chooseFile() {
-        JFileChooser jChooser = new JFileChooser();
-        SwingUtils.updateFont(jChooser, FontUtil.getArial12());
-        File tem = new File(dataHandler.getData().getLastOpenPath());
-        if (!tem.exists()) {
-            tem = new File(SystemUtil.getDefaultUserFile());
-        }
-        jChooser.setCurrentDirectory(tem);//设置默认打开路径
-        jChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);//只能选择目录
-        jChooser.setDialogType(JFileChooser.OPEN_DIALOG);//设置此对话框的类型
-        jChooser.setDialogTitle("选择映射文件夹");
-        jChooser.setSize(new Dimension(650, 500));
-        jChooser.setPreferredSize(new Dimension(650, 500));
-        jChooser.setMultiSelectionEnabled(true);//可以选择多个文件
-        int index = jChooser.showDialog(VpicFrame.getInstance(), "确定");
-        if (index == JFileChooser.APPROVE_OPTION) {
-            try {
-                dataHandler.getData().setLastOpenPath(jChooser.getCurrentDirectory().getCanonicalPath());
-                dataHandler.update();
-                File[] files = jChooser.getSelectedFiles();
-                for (File sFile : files) {
-                    listService.addTreeData(sFile.getCanonicalPath());
-                }
-                listService.reloadTreeData();
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        FileCacheHelper.asynIndex();
-                    }
-                });
-            } catch (IOException e1) {
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-        }
-    }
-
     public void hidePanel() {
         VpicFrame.getInstance().getjSplitPane().setDividerLocation(0.0);
 //        VpicFrame.getInstance().getjSplitPane().addImpl();
@@ -403,6 +325,7 @@ public class ListPanel extends JPanel implements Page {
     public TreePath getLastTreePath() {
         return lastTreePath;
     }
+
     //    /**
 //     * 设置背景色
 //     *

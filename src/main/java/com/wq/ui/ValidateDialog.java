@@ -1,9 +1,9 @@
 package com.wq.ui;
 
+import com.wq.cache.SystemCache;
 import com.wq.constans.Constan;
 import com.wq.service.ListService;
 import com.wq.service.ListServiceImpl;
-import com.wq.service.SysDataHandler;
 import com.wq.util.MD5Util;
 import com.wq.util.MesBox;
 import com.wq.util.SwingUtils;
@@ -51,7 +51,7 @@ public class ValidateDialog extends JDialog {
         jb.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String pass = new String(jf.getPassword());
-                if (MD5Util.validPassword(pass, SysDataHandler.getInstance().getData().getPassword())) {
+                if (MD5Util.validPassword(pass, SystemCache.getInstance().getData().getPassword())) {
                     VpicFrame vpic = VpicFrame.getInstance();
                     vpic.setVisible(true);
                     vd.setVisible(false);
@@ -72,7 +72,7 @@ public class ValidateDialog extends JDialog {
 
             public void actionPerformed(ActionEvent e) {
                 String pass = new String(jf.getPassword());
-                if (MD5Util.validPassword(pass, SysDataHandler.getInstance().getData().getPassword())) {
+                if (MD5Util.validPassword(pass, SystemCache.getInstance().getData().getPassword())) {
                     VpicFrame vpic = VpicFrame.getInstance();
                     vpic.setVisible(true);
                     vd.setVisible(false);

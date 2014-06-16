@@ -1,6 +1,7 @@
 package com.wq.service;
 
 import com.wq.cache.AllCache;
+import com.wq.cache.SystemCache;
 import com.wq.ui.ListPanel;
 import com.wq.ui.ViewContentPanel;
 import com.wq.ui.ViewScrollPanel;
@@ -24,7 +25,7 @@ public class ListServiceImpl implements ListService {
     private static ListServiceImpl ourInstance = new ListServiceImpl();
     private CacheService cacheService = CacheServiceImpl.getInstance();
     private static LightLog logger = LightLog.getInstance(ListServiceImpl.class);
-    private SysDataHandler handler = SysDataHandler.getInstance();
+    private SystemCache handler = SystemCache.getInstance();
 
     public static ListServiceImpl getInstance() {
         return ourInstance;
@@ -55,7 +56,7 @@ public class ListServiceImpl implements ListService {
         }
         ListPanel.getInstance().loadTreeModel();
         ListPanel.getInstance().getTree().updateUI();
-        JTreeUtil.expandTree(ListPanel.getInstance().getTree(), SysDataHandler.getInstance().getData().isExpland());  //展开所有子节点
+        JTreeUtil.expandTree(ListPanel.getInstance().getTree(), SystemCache.getInstance().getData().isExpland());  //展开所有子节点
         ViewScrollPanel.getInstance().getVerticalScrollBar().setValue(1);//滚动条设置为0
         Map<String, List<String>> map = AllCache.getInstance().getMenu();
         if (map != null && map.size() > 0) {

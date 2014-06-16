@@ -1,7 +1,7 @@
 package com.wq.ui;
 
+import com.wq.cache.SystemCache;
 import com.wq.constans.Constan;
-import com.wq.service.SysDataHandler;
 import com.wq.util.FontUtil;
 
 import javax.swing.*;
@@ -18,7 +18,7 @@ import java.awt.event.ActionEvent;
 public class FirstDialog extends JDialog implements Page {
     private Container con;//容器
     private static FirstDialog firstDialog;
-    private SysDataHandler handler = SysDataHandler.getInstance();
+    private SystemCache handler = SystemCache.getInstance();
 
     private FirstDialog() {
         constructPlate();

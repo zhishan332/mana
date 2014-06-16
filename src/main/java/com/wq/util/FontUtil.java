@@ -14,6 +14,10 @@ public class FontUtil {
         return new Font(Font.DIALOG_INPUT, Font.PLAIN, 11);
     }
 
+    public static Font getDefault() {
+        return getWei12();
+    }
+
     public static Font getSong12() {
         return new Font("宋体", Font.PLAIN, 12);
     }
@@ -26,9 +30,14 @@ public class FontUtil {
         return new Font("宋体", Font.PLAIN, 14);
     }
 
+    public static Font getWei12() {
+        return new Font("微软雅黑", Font.PLAIN, 12);
+    }
+
     public static Font getArial13() {
         return new Font("Aria", Font.PLAIN, 13);
     }
+
     public static Font getArial12() {
         return new Font("Aria", Font.PLAIN, 12);
     }

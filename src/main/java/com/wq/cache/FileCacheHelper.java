@@ -8,9 +8,7 @@ import com.wq.util.ImageLabelUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +29,7 @@ public class FileCacheHelper {
     private static final Logger log = LoggerFactory.getLogger(FileCacheHelper.class);
     private static String cachePath = Constan.CACHEPATH;
     private static String suffix = ".dat";
-    private static int BUFFER=1024*10;
+    private static int BUFFER = 1024 * 10;
 
     public static void save(FileCacheModel fileCacheModel, long hashcode) {
         ObjectOutputStream out = null;
@@ -46,7 +44,7 @@ public class FileCacheHelper {
                 }
             }
             log.info("创建缓存文件：" + ff.getName());
-            BufferedOutputStream  dest= new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(ff)),BUFFER);
+            BufferedOutputStream dest = new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(ff)), BUFFER);
             out = new ObjectOutputStream(dest);
             out.writeObject(fileCacheModel);
             out.flush();
@@ -56,6 +54,7 @@ public class FileCacheHelper {
             log.error("缓存图片异常", e);
         }
     }
+
     public static void save2(FileCacheModel fileCacheModel, long hashcode) {
         ObjectOutputStream out = null;
         try {
@@ -81,6 +80,7 @@ public class FileCacheHelper {
             log.error("缓存图片异常", e);
         }
     }
+
     public static FileCacheModel get(long hashcode) {
         ObjectInputStream in = null;
         FileCacheModel data = null;
@@ -100,6 +100,7 @@ public class FileCacheHelper {
         }
         return data;
     }
+
     public static FileCacheModel get2(long hashcode) {
         ObjectInputStream in = null;
         FileCacheModel data = null;
@@ -117,6 +118,7 @@ public class FileCacheHelper {
         }
         return data;
     }
+
     public static void deleteSome() {
         File ff = new File(cachePath);
         File[] lists = ff.listFiles();
@@ -127,15 +129,16 @@ public class FileCacheHelper {
             dFile.deleteOnExit();
         }
     }
-    public static void asynIndex(){
+
+    public static void asynIndex() {
         ExecutorService pool = Executors.newSingleThreadExecutor();
         pool.execute(new Runnable() {
             @Override
             public void run() {
-                long beg=System.currentTimeMillis();
+                long beg = System.currentTimeMillis();
                 log.info("开始构建缓存>>>>>>>>>>>>");
                 FileCacheHelper.index();//构建缓存索引
-                log.info("构建缓存索引完成>,本次耗时："+(System.currentTimeMillis()-beg));
+                log.info("构建缓存索引完成>,本次耗时：" + (System.currentTimeMillis() - beg));
             }
         });
     }
@@ -147,10 +150,10 @@ public class FileCacheHelper {
         for (Map.Entry<String, List<String>> entry : map.entrySet()) {
             List<String> list = entry.getValue();
             for (int i = 0; i < list.size(); i += 10) {
-                long beg=System.currentTimeMillis();
+                long beg = System.currentTimeMillis();
                 long hashcode = indexImageLabel(entry.getKey(), list, i);
-                long end=System.currentTimeMillis();
-                log.info(hashcode+suffix+"构建耗时："+(end-beg)+"ms");
+                long end = System.currentTimeMillis();
+                log.info(hashcode + suffix + "构建耗时：" + (end - beg) + "ms");
                 String newName = String.valueOf(hashcode);
                 validList.add(cachePath + newName + suffix);
             }
@@ -182,6 +185,7 @@ public class FileCacheHelper {
         }
         return hashCode;
     }
+
     //删除无用的缓存
     private static void deleteDirty(List<String> validList) {
         File cf = new File(cachePath);
@@ -190,7 +194,7 @@ public class FileCacheHelper {
             for (File file : files) {
                 String name = file.getName();
                 if (!validList.contains(name)) {
-                    log.info("删除无用缓存文件："+file.getName());
+                    log.info("删除无用缓存文件：" + file.getName());
                     file.deleteOnExit();
                 }
             }
@@ -211,12 +215,12 @@ public class FileCacheHelper {
         FileCacheModel mod = new FileCacheModel();
         mod.setModifyDate(1231231231);
         mod.setObject(clist);
-        long beg=System.currentTimeMillis();
+        long beg = System.currentTimeMillis();
         FileCacheHelper.save(mod, 1111111111);
-        long end=System.currentTimeMillis();
-        System.out.println(end-beg);
+        long end = System.currentTimeMillis();
+        System.out.println(end - beg);
         FileCacheHelper.get(1111111111);
-        long end2=System.currentTimeMillis();
-        System.out.println(end2-end);
+        long end2 = System.currentTimeMillis();
+        System.out.println(end2 - end);
     }
 }

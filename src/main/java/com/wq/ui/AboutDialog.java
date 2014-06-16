@@ -48,25 +48,25 @@ public class AboutDialog extends JDialog implements Page {
         con.setBackground(Color.DARK_GRAY);
         JLabel name = new JLabel("作者：王庆");//图片名称
         name.setForeground(Color.white);
-        name.setFont(FontUtil.getArial12());
+        name.setFont(FontUtil.getDefault());
         JLabel email = new JLabel("Email：zhishan99@163.com");//图片名称
         email.setForeground(Color.white);
-        email.setFont(FontUtil.getArial12());
-        JLabel web = new JLabel("博客：http://www.cnblogs.com/zhishan/");//图片名称
+        email.setFont(FontUtil.getDefault());
+        JLabel web = new JLabel("微博：http://weibo.com/aziqing");//图片名称
         web.setForeground(Color.white);
-        web.setFont(FontUtil.getArial12());
+        web.setFont(FontUtil.getDefault());
         JLabel bb = new JLabel("版本号：1.0.0");//图片名称
         bb.setForeground(Color.white);
-        bb.setFont(FontUtil.getArial12());
+        bb.setFont(FontUtil.getDefault());
         JLabel sm = new JLabel("说明：该软件可以完整无损的浏览大图片，并能给您浏览网页图片的感觉");//图片名称
         sm.setForeground(Color.white);
-        sm.setFont(FontUtil.getArial12());
+        sm.setFont(FontUtil.getDefault());
         JLabel sm2 = new JLabel("您只需要将本地图片文件夹映射到Mana中即可。");//图片名称
         sm2.setForeground(Color.white);
-        sm2.setFont(FontUtil.getArial12());
+        sm2.setFont(FontUtil.getDefault());
         JLabel sm3 = new JLabel("声明：未经作者同意，不可将本软件用于商业用途。");//图片名称
         sm3.setForeground(Color.white);
-        sm3.setFont(FontUtil.getArial12());
+        sm3.setFont(FontUtil.getDefault());
         con.add(name);
         con.add(email);
         con.add(web);

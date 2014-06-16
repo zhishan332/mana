@@ -1,11 +1,10 @@
 package com.wq.ui;
 
+import com.wq.cache.SystemCache;
 import com.wq.constans.Constan;
-import com.wq.model.SysData;
 import com.wq.service.FetchService;
 import com.wq.service.FetchServiceImpl;
 import com.wq.service.ListServiceImpl;
-import com.wq.service.SysDataHandler;
 import com.wq.util.FontUtil;
 import com.wq.util.MesBox;
 
@@ -38,7 +37,7 @@ public class FetchImgPanel extends JFrame implements Page {
     private JButton cancelBtn;
     private JLabel infoLabel;
     private Fetcher fetcher;
-    private SysData sysData = SysDataHandler.getInstance().getData();
+    private com.wq.model.SysData sysData = SystemCache.getInstance().getData();
 
     private FetchImgPanel() {
         constructPlate();
@@ -169,7 +168,7 @@ public class FetchImgPanel extends JFrame implements Page {
                 sysData.setFetchMinHeight(imgH);
                 sysData.setFetchDeep(deep);
                 sysData.setFetchToMana(addToMana);
-                SysDataHandler.getInstance().update();
+                SystemCache.getInstance().update();
                 FetchService fetchService = new FetchServiceImpl();
                 num = fetchService.fetchUrl(url, sysData.getSavePath(), imgW, imgH, deep, addToMana);
             }

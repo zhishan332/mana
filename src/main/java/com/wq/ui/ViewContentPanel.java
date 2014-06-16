@@ -1,30 +1,23 @@
 package com.wq.ui;
 
-import com.wq.cache.AllCache;
 import com.wq.cache.FileCacheHelper;
-import com.wq.cache.ImageCacheManager;
 import com.wq.constans.Constan;
 import com.wq.model.FileCacheModel;
-import com.wq.model.SysData;
 import com.wq.service.ListService;
 import com.wq.service.ListServiceImpl;
-import com.wq.service.SysDataHandler;
+import com.wq.cache.SystemCache;
 import com.wq.util.ButtonUtil;
 import com.wq.util.FontUtil;
 import com.wq.util.ImageLabelUtil;
-import com.wq.util.ImageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,17 +31,9 @@ import java.util.List;
  */
 public class ViewContentPanel extends JPanel implements Page {
     private static final Logger log = LoggerFactory.getLogger(ViewContentPanel.class);
-    private static ViewContentPanel viewContentPanel;
     private JLabel jWaitLabel = new JLabel();
     private ListService listService= ListServiceImpl.getInstance();
-    private SysData data = SysDataHandler.getInstance().getData();
-//    public static ViewContentPanel getInstance() {
-//        if (viewContentPanel == null) {
-//            viewContentPanel = new ViewContentPanel();
-//        }
-//        return viewContentPanel;
-//    }
-
+    private com.wq.model.SysData data = SystemCache.getInstance().getData();
     private List<String> list = new LinkedList<String>();
     private int start;
     private String folder;
@@ -156,7 +141,18 @@ public class ViewContentPanel extends JPanel implements Page {
                    });
                }
             }
-            for(JLabel jLabel:labels){
+            for(final JLabel jLabel:labels){
+                jLabel.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseReleased(MouseEvent e) {
+                        if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) != 0
+                                && !e.isControlDown() && !e.isShiftDown()) {
+                            PicMenu.getInstance().show(jLabel, e.getX(), e.getY());
+                            PicMenu.getInstance().setFilePath(jLabel.getName());
+                            PicMenu.getInstance().setjLabel(jLabel);
+                        }
+                    }
+                });
                 if (!data.isHMode()) {
                     jLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
                 } else {

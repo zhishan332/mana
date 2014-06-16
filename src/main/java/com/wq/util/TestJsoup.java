@@ -1,7 +1,6 @@
 package com.wq.util;
 
-import com.wq.model.SysData;
-import com.wq.service.SysDataHandler;
+import com.wq.cache.SystemCache;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -18,7 +17,7 @@ import java.io.IOException;
  */
 public class TestJsoup {
     public static void main(String[] args) throws IOException {
-        SysData data = SysDataHandler.getInstance().getData();
+        com.wq.model.SysData data = SystemCache.getInstance().getData();
         WebUtil.initProxy("172.16.9.12", 8088, "wangqinga", "super007");
         long a = System.currentTimeMillis();
 //        String html = WebUtil.getContent("http://huaban.com/pins/67208446/");

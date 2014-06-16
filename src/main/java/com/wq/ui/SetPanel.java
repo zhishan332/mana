@@ -1,10 +1,9 @@
 package com.wq.ui;
 
+import com.wq.cache.SystemCache;
 import com.wq.constans.Constan;
-import com.wq.model.SysData;
 import com.wq.service.ListService;
 import com.wq.service.ListServiceImpl;
-import com.wq.service.SysDataHandler;
 import com.wq.util.FontUtil;
 import com.wq.util.MD5Util;
 import com.wq.util.SwingUtils;
@@ -46,7 +45,7 @@ public class SetPanel extends JFrame implements Page {
     private JLabel passJlable;
     private JPasswordField jf;
     private ListService listService = ListServiceImpl.getInstance();
-    private SysData sysdata;
+    private com.wq.model.SysData sysdata;
     private JPanel proxyPanel;
     private JLabel proxyHostLabel;
     private JTextField proxyHostField;
@@ -292,7 +291,7 @@ public class SetPanel extends JFrame implements Page {
             list.add("png");
             list.add("PNG");
         }
-        SysDataHandler handler = SysDataHandler.getInstance();
+        SystemCache handler = SystemCache.getInstance();
         sysdata = handler.getData();
         if (!isExp.isSelected()) {
             sysdata.setExpland(false);

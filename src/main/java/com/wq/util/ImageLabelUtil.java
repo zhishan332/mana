@@ -1,17 +1,13 @@
 package com.wq.util;
 
 import com.wq.cache.AllCache;
-import com.wq.model.SysData;
-import com.wq.service.SysDataHandler;
-import com.wq.ui.PicMenu;
+import com.wq.cache.SystemCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 
@@ -31,7 +27,7 @@ public class ImageLabelUtil {
      */
     public static JLabel getImageLabel(final String path) {
         BufferedImage bufferedImage = null;
-        SysData data = SysDataHandler.getInstance().getData();
+        com.wq.model.SysData data = SystemCache.getInstance().getData();
         boolean isgif = false;
         Image img = null;
         if (path.endsWith(".gif") || path.endsWith(".GIF")) {
@@ -83,17 +79,7 @@ public class ImageLabelUtil {
             }
         }
         jLabel.setIcon(icon);
-        jLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) != 0
-                        && !e.isControlDown() && !e.isShiftDown()) {
-                    PicMenu.getInstance().show(jLabel, e.getX(), e.getY());
-                    PicMenu.getInstance().setFilePath(path);
-                    PicMenu.getInstance().setjLabel(jLabel);
-                }
-            }
-        });
+        jLabel.setName(path);
         return jLabel;
     }
 }

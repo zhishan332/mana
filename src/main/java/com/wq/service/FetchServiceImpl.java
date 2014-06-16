@@ -1,5 +1,6 @@
 package com.wq.service;
 
+import com.wq.cache.SystemCache;
 import com.wq.model.SysData;
 import com.wq.util.JsoupUtil;
 import com.wq.util.WebUtil;
@@ -26,7 +27,7 @@ import java.util.Set;
 public class FetchServiceImpl implements FetchService {
     private static int deepFlag = 1; //深度计数
     private static int fetchNum = 0;
-    private SysData data = SysDataHandler.getInstance().getData();
+    private SysData data = SystemCache.getInstance().getData();
 
     @Override
     public int fetchUrl(String url, String dstPath, int imgWidth, int imgHeight, int deep, boolean addToMana) {

@@ -1,5 +1,6 @@
 package com.wq.service;
 
+import com.wq.cache.SystemCache;
 import com.wq.model.DirMenu;
 import com.wq.util.FileFilter;
 import com.wq.util.FileUtil;
@@ -21,7 +22,7 @@ import java.util.concurrent.ExecutorService;
 public class CacheServiceImpl implements CacheService {
     private static CacheServiceImpl ourInstance = new CacheServiceImpl();
     private List<DefaultMutableTreeNode> nodeList = new LinkedList<DefaultMutableTreeNode>();
-    private SysDataHandler sysDataHandler = SysDataHandler.getInstance();
+    private SystemCache systemCache = SystemCache.getInstance();
 
     public static CacheServiceImpl getInstance() {
         return ourInstance;
@@ -63,7 +64,7 @@ public class CacheServiceImpl implements CacheService {
     }
 
     private boolean openEmptyFolder(File file) {
-        if (sysDataHandler.getData().isIgnoreEmptyFolder()) {
+        if (systemCache.getData().isIgnoreEmptyFolder()) {
             return FileUtil.getFileSize(file) > 0;
         }
         return true;
@@ -71,8 +72,8 @@ public class CacheServiceImpl implements CacheService {
 
     @Override
     public Map<String, List<String>> getAllPic() {
-        Set<String> list = sysDataHandler.getData().getFileList();
-        Set<String> typeList = sysDataHandler.getData().getTypeList();
+        Set<String> list = systemCache.getData().getFileList();
+        Set<String> typeList = systemCache.getData().getTypeList();
         Map<String, List<String>> map = new LinkedHashMap<String, List<String>>();
         final FileFilter fileFilter = new FileFilter(typeList); //文件的后缀名
         for (String filePath : list) {

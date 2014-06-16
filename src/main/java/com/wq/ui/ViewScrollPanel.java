@@ -1,8 +1,7 @@
 package com.wq.ui;
 
 import com.wq.cache.AllCache;
-import com.wq.model.SysData;
-import com.wq.service.SysDataHandler;
+import com.wq.cache.SystemCache;
 
 import javax.swing.*;
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.Map;
 public class ViewScrollPanel extends JScrollPane implements Page {
     private static ViewScrollPanel viewPanel;
     private ViewContentPanel viewContentPanel;
-    private SysData data = SysDataHandler.getInstance().getData();
+    private com.wq.model.SysData data = SystemCache.getInstance().getData();
 
     public static ViewScrollPanel getInstance() {
         if (viewPanel == null) {
@@ -36,12 +35,12 @@ public class ViewScrollPanel extends JScrollPane implements Page {
         if (data.isHMode()){
             this.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);//垂直滚动条适时出现
             this.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);//水平滚动条适时出现
-            this.getHorizontalScrollBar().setUnitIncrement(SysDataHandler.getInstance().getData().getSpeed());//滚动速度
+            this.getHorizontalScrollBar().setUnitIncrement(SystemCache.getInstance().getData().getSpeed());//滚动速度
         }else{
             this.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);//垂直滚动条适时出现
             this.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);//水平滚动条适时出现
-            this.getVerticalScrollBar().setUnitIncrement(SysDataHandler.getInstance().getData().getSpeed());//滚动速度
-            this.getHorizontalScrollBar().setUnitIncrement(SysDataHandler.getInstance().getData().getSpeed());//滚动速度
+            this.getVerticalScrollBar().setUnitIncrement(SystemCache.getInstance().getData().getSpeed());//滚动速度
+            this.getHorizontalScrollBar().setUnitIncrement(SystemCache.getInstance().getData().getSpeed());//滚动速度
         }
     }
 
@@ -50,7 +49,7 @@ public class ViewScrollPanel extends JScrollPane implements Page {
      */
     @Override
     public void constructPage() {
-//        if(SysDataHandler.getInstance().getData().isHMode()){
+//        if(SystemCache.getInstance().getData().isHMode()){
 //            final JScrollBar jScrollBar2 = this.getHorizontalScrollBar();
 //            jScrollBar2.addAdjustmentListener(new AdjustmentListener() {
 //                private int with = 0;

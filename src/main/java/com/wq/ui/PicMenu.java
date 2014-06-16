@@ -1,11 +1,13 @@
 package com.wq.ui;
 
 import com.sun.awt.AWTUtilities;
+import com.wq.cache.SystemCache;
 import com.wq.constans.Constan;
-import com.wq.service.SysDataHandler;
 import com.wq.util.FileUtil;
 import com.wq.util.FontUtil;
 import com.wq.util.ImageUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -27,13 +29,8 @@ import java.util.Calendar;
  * 右键图片菜单
  */
 public class PicMenu extends JPopupMenu implements Page {
+    private static final Logger log = LoggerFactory.getLogger(PicMenu.class);
     private static PicMenu picMenu = null;
-    //    private JMenuItem saveItem;
-    private JMenuItem openItem;
-    private JMenuItem delItem;
-    private JMenuItem copyItem;
-    private JMenuItem saveAsItem;
-    private JMenuItem propItem;
     private JMenuItem hideItem;
     private JMenuItem showItem;
     private String filePath;
@@ -53,8 +50,8 @@ public class PicMenu extends JPopupMenu implements Page {
 
     @Override
     public void constructPlate() {
-        this.setSize(200, 175);
-        this.setPreferredSize(new Dimension(200, 175));
+        this.setSize(180, 190);
+        this.setPreferredSize(new Dimension(180, 190));
     }
 
     @Override
@@ -73,8 +70,8 @@ public class PicMenu extends JPopupMenu implements Page {
 //        KeyStroke keyStroke1 = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK);
 //        saveItem.setAccelerator(keyStroke1);
 //        this.add(saveItem);
-        hideItem = new JMenuItem(" 隐藏右方菜单", new ImageIcon(Constan.RESPAHT + "res/img/left.png"));
-        hideItem.setFont(FontUtil.getSong12());
+        hideItem = new JMenuItem("隐藏右方菜单", new ImageIcon(Constan.RESPAHT + "res/img/left.png"));
+        hideItem.setFont(FontUtil.getDefault());
         hideItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ListPanel.getInstance().hidePanel();
@@ -85,8 +82,8 @@ public class PicMenu extends JPopupMenu implements Page {
             }
         });
         this.add(hideItem);
-        showItem = new JMenuItem(" 显示右方菜单", new ImageIcon(Constan.RESPAHT + "res/img/right.png"));
-        showItem.setFont(FontUtil.getSong12());
+        showItem = new JMenuItem("显示右方菜单", new ImageIcon(Constan.RESPAHT + "res/img/right.png"));
+        showItem.setFont(FontUtil.getDefault());
         showItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ListPanel.getInstance().showPanel();
@@ -105,28 +102,9 @@ public class PicMenu extends JPopupMenu implements Page {
         }
         this.add(showItem);
         this.add(new JPopupMenu.Separator());
-        openItem = new JMenuItem(" 文件夹中显示", new ImageIcon(Constan.RESPAHT + "res/img/fire.png"));
-        openItem.setFont(FontUtil.getSong12());
-        openItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    String path = PicMenu.getInstance().filePath;
-                    File file=new File(path);
-//                    String[] cmd = new String[4];
-//                    cmd[0]="explorer.exe";
-//                    cmd[1]=" ";
-//                    cmd[2]="/select,";
-//                    cmd[3]=path;
-//                    Runtime.getRuntime().exec(cmd);
-                    java.awt.Desktop.getDesktop().open(file.getParentFile());
-                } catch (IOException exp) {
-                    // TODO Auto-generated catch block
-                    exp.printStackTrace();
-                }
-            }
-        });
-        copyItem = new JMenuItem(" 复制");
-        copyItem.setFont(FontUtil.getSong12());
+
+        JMenuItem copyItem = new JMenuItem("复制");
+        copyItem.setFont(FontUtil.getDefault());
         copyItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (filePath.endsWith(".gif") || filePath.endsWith(".GIF")) return;//todo 不支持GIF复制粘贴
@@ -136,12 +114,12 @@ public class PicMenu extends JPopupMenu implements Page {
             }
         });
         this.add(copyItem);
-        saveAsItem = new JMenuItem(" 另存为");
-        saveAsItem.setFont(FontUtil.getSong12());
+        JMenuItem saveAsItem = new JMenuItem("另存为");
+        saveAsItem.setFont(FontUtil.getDefault());
         saveAsItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser jChooser2 = new JFileChooser();
-                jChooser2.setSelectedFile(new File(SysDataHandler.getInstance().getData().getSavePath() + new File(filePath).getName()));//设置默认打开路径
+                jChooser2.setSelectedFile(new File(SystemCache.getInstance().getData().getSavePath() + new File(filePath).getName()));//设置默认打开路径
                 jChooser2.setDialogType(JFileChooser.SAVE_DIALOG);//设置保存对话框
                 int index = jChooser2.showDialog(VpicFrame.getInstance(), "另存为");
                 if (index == JFileChooser.APPROVE_OPTION) {
@@ -149,14 +127,14 @@ public class PicMenu extends JPopupMenu implements Page {
                         String writePath = jChooser2.getSelectedFile().getCanonicalPath();
                         FileUtil.copyFile(new File(filePath), new File(writePath));
                     } catch (IOException e1) {
-                        e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        log.error("另存为失败", e1);
                     }
                 }
             }
         });
         this.add(saveAsItem);
-        delItem = new JMenuItem(" 删除(磁盘删除)", new ImageIcon(Constan.RESPAHT + "res/img/del.png"));
-        delItem.setFont(FontUtil.getSong12());
+        JMenuItem delItem = new JMenuItem("删除(慎：磁盘删除)", new ImageIcon(Constan.RESPAHT + "res/img/del.png"));
+        delItem.setFont(FontUtil.getDefault());
         delItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String path = PicMenu.getInstance().filePath;
@@ -164,7 +142,7 @@ public class PicMenu extends JPopupMenu implements Page {
                 if (jLabel != null) {
                     ViewScrollPanel.getInstance().getViewContentPanel().remove(jLabel);
                     if (file.exists()) {
-                        file.delete();
+                        file.deleteOnExit();
                     }
 //                        ViewContentPanel.getInstance().remove(jLabel); //移除组件刷新
                     jLabel = null;
@@ -174,10 +152,23 @@ public class PicMenu extends JPopupMenu implements Page {
             }
         });
         this.add(delItem);
+        JMenuItem openItem = new JMenuItem("文件夹中显示", new ImageIcon(Constan.RESPAHT + "res/img/fire.png"));
+        openItem.setFont(FontUtil.getDefault());
+        openItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String path = PicMenu.getInstance().filePath;
+                    File file = new File(path);
+                    java.awt.Desktop.getDesktop().open(file.getParentFile());
+                } catch (IOException exp) {
+                    log.error("文件夹中显示失败", exp);
+                }
+            }
+        });
         this.add(openItem);
         this.add(new JPopupMenu.Separator());
-        propItem = new JMenuItem(" 属性");
-        propItem.setFont(FontUtil.getSong12());
+        JMenuItem propItem = new JMenuItem("属性");
+        propItem.setFont(FontUtil.getDefault());
         propItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 PropDialog propDialog = PropDialog.getInstance();
@@ -200,14 +191,15 @@ public class PicMenu extends JPopupMenu implements Page {
                 try {
                     fis = new FileInputStream(file);
                 } catch (FileNotFoundException e1) {
-                    e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    log.error("属性显示失败", e1);
                 }
                 BufferedImage bufferedImg = null;
                 try {
                     bufferedImg = ImageIO.read(fis);
                 } catch (IOException e1) {
-                    e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    log.error("属性显示失败", e1);
                 }
+                assert bufferedImg != null;
                 int imgWidth = bufferedImg.getWidth();
                 int imgHeight = bufferedImg.getHeight();
                 propDialog.getPicName().setText("  图片名称：" + file.getName());

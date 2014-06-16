@@ -1,8 +1,10 @@
-package com.wq.service;
+package com.wq.cache;
 
 import com.wq.constans.Constan;
 import com.wq.model.SysData;
 import com.wq.util.SystemUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.HashSet;
@@ -15,20 +17,21 @@ import java.util.Set;
  * Time: 下午3:12
  * To change this template use File | Settings | File Templates.
  */
-public class SysDataHandler {
+public class SystemCache {
+    private static final Logger log = LoggerFactory.getLogger(SystemCache.class);
+    private static SystemCache systemCache = null;
     private File dbpath = new File(Constan.DBPATH);
-    private static SysDataHandler sysDataHandler = null;
     private SysData data;
 
-    private SysDataHandler() {
+    private SystemCache() {
     }
 
-    public static SysDataHandler getInstance() {
-        if (sysDataHandler == null) sysDataHandler = new SysDataHandler();
-        return sysDataHandler;
+    public static SystemCache getInstance() {
+        if (systemCache == null) systemCache = new SystemCache();
+        return systemCache;
     }
 
-    public SysData getData() {
+    public com.wq.model.SysData getData() {
         if (data == null) loadData();
         return data;
     }
@@ -38,13 +41,13 @@ public class SysDataHandler {
         ObjectInputStream in = null;
         try {
             in = new ObjectInputStream(new FileInputStream(dbpath));
-            SysData data = (SysData) in.readObject();
+            com.wq.model.SysData data = (com.wq.model.SysData) in.readObject();
             in.close();
             this.data = data;
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            log.error("读取系统缓存失败", e);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            log.error("读取系统缓存失败", e);
         }
     }
 
@@ -56,20 +59,21 @@ public class SysDataHandler {
      * 初始化系统数据
      */
     private void init() {
+        boolean isSuc = false;
         try {
-            dbpath.createNewFile();
+            isSuc = dbpath.createNewFile();
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            log.error("初始化系统缓存失败", e);
         }
         SysData data = new SysData();
-        Set fileList = new HashSet();
+        Set<String> fileList = new HashSet<String>();
         data.setFileList(fileList);
         data.setExpland(true);
         data.setFirstLogin(true);
         data.setSavePath(SystemUtil.getDefaultUserFile());
         data.setLastOpenPath(SystemUtil.getDefaultUserFile());
         data.setSpeed(35);
-        Set typeList = new HashSet();
+        Set<String> typeList = new HashSet<String>();
         typeList.add("jpg");
         typeList.add("JPG");
         typeList.add("jpeg");
@@ -88,17 +92,18 @@ public class SysDataHandler {
         data.setFetchToMana(true);
         data.setUseProxy(false);
         data.setHMode(false);
-        writeSysData(data);
+        if (isSuc)
+            writeSysData(data);
     }
 
-    private void writeSysData(SysData data) {
+    private void writeSysData(com.wq.model.SysData data) {
         ObjectOutputStream out = null;
         try {
             out = new ObjectOutputStream(new FileOutputStream(dbpath));
             out.writeObject(data);
             out.close();
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            log.error("写入系统缓存失败", e);
         }
     }
 }

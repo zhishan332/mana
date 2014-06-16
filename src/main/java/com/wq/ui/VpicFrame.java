@@ -1,19 +1,16 @@
 package com.wq.ui;
 
 import com.wq.cache.AllCache;
-import com.wq.cache.FileCacheHelper;
 import com.wq.constans.Constan;
 import com.wq.service.CacheService;
 import com.wq.service.CacheServiceImpl;
 import com.wq.util.ButtonUtil;
 import com.wq.util.FileUtil;
 import com.wq.util.FontUtil;
-import com.wq.util.ShortcutManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Map;
@@ -117,14 +114,16 @@ public class VpicFrame extends JFrame {
         JToolBar jToolBar = new JToolBar();
         jToolBar.setFloatable(false);
         jToolBar.setBorderPainted(false); //不画边界
+//        jToolBar.setBackground(Color.BLACK);
         infoLabel = new JLabel("无");
         infoLabel.setPreferredSize(new Dimension(500, 20));
         infoLabel.setMaximumSize(new Dimension(500, 20));
-        infoLabel.setFont(FontUtil.getSong12());
+        infoLabel.setFont(FontUtil.getDefault());
         numField = new JLabel("图片总数:0");
         numField.setFont(FontUtil.getSong12());
         numField.setPreferredSize(new Dimension(100, 20));
         numField.setMaximumSize(new Dimension(100, 20));
+        numField.setFont(FontUtil.getDefault());
         loadBotoom();
         final MemoryPanel memoryPanel = new MemoryPanel();
         memoryPanel.setPreferredSize(new Dimension(100, 16));
@@ -139,19 +138,16 @@ public class VpicFrame extends JFrame {
                 memoryPanel.repaint();
             }
         });
-        JLabel email = new JLabel("反馈：manaphoto@163.com");
-        email.setFont(FontUtil.getSong12());
-        email.setPreferredSize(new Dimension(200, 20));
-        jToolBar.addSeparator();
+        JLabel weibo = new JLabel("反馈：http://weibo.com/aziqing",SwingConstants.RIGHT);
+        weibo.setFont(FontUtil.getDefault());
+        weibo.setPreferredSize(new Dimension(300, 20));
+        weibo.setMaximumSize(new Dimension(300, 16));
+//        jToolBar.addSeparator();
         jToolBar.add(infoLabel);
-        jToolBar.addSeparator();
         jToolBar.add(numField);
-        jToolBar.addSeparator();
-        jToolBar.add(email);
-        jToolBar.addSeparator();
         jToolBar.add(memoryPanel);
         jToolBar.add(rubBtn);
-        jToolBar.addSeparator();
+        jToolBar.add(weibo);
         jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true);
         jSplitPane.setBorder(null);
         jSplitPane.setDividerSize(8);
