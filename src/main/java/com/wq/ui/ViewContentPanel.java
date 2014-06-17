@@ -1,8 +1,9 @@
 package com.wq.ui;
 
-import com.wq.cache.FileCacheHelper;
+import com.wq.cache.LocalFileCache;
 import com.wq.cache.SystemCache;
 import com.wq.constans.Constan;
+import com.wq.exception.ManaException;
 import com.wq.model.FileCacheModel;
 import com.wq.service.ListService;
 import com.wq.service.ListServiceImpl;
@@ -23,11 +24,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wangq
- * Date: 12-8-2
- * Time: 下午4:02
- * 图床 ,对JAVA6.0,它支持得图象格式有[BMP, bmp, jpg, JPG, wbmp, jpeg, png, PNG, JPEG, WBMP, GIF, gif]
+ * 图片展示Panel,对JAVA6.0,它支持得图象格式有[BMP, bmp, jpg, JPG, wbmp, jpeg, png, PNG, JPEG, WBMP, GIF, gif]
+ *
+ * @author wangqing
+ * @since 1.0.0
  */
 public class ViewContentPanel extends JPanel implements Page {
     private static final Logger log = LoggerFactory.getLogger(ViewContentPanel.class);
@@ -113,7 +113,7 @@ public class ViewContentPanel extends JPanel implements Page {
             final long mdate = folderFile.lastModified();
             final long hashCode = list.hashCode();
             log.info("查询缓存，hashcode:" + hashCode + "，修改时间：" + mdate);
-            FileCacheModel cache = FileCacheHelper.get(hashCode);
+            FileCacheModel cache = LocalFileCache.get(hashCode);
             if (null != cache) {
                 log.info("命中缓存，缓存修改时间：" + cache.getModifyDate() + ",当前修改时间：" + mdate);
             }
@@ -122,20 +122,27 @@ public class ViewContentPanel extends JPanel implements Page {
                 log.info("从res/cache下加载图片>>>>>>>>>>>>>>>>>>");
                 labels = (List<JLabel>) cache.getObject();
             } else {
+                boolean isSuc = true;
                 for (final String path : list) {
                     File file = new File(path);
                     if (!file.exists()) continue;
-                    JLabel imgLabel = ImageLabelUtil.getImageLabel(path);
+                    JLabel imgLabel;
+                    try {
+                        imgLabel = ImageLabelUtil.getImageLabel(path);
+                    } catch (ManaException e) {
+                        isSuc = false;
+                        break;
+                    }
                     if (null != imgLabel) labels.add(imgLabel);
                 }
-                final FileCacheModel fileCacheModel = new FileCacheModel();
-                fileCacheModel.setModifyDate(mdate);
-                fileCacheModel.setObject(labels);
-                if (!labels.isEmpty()) {
+                if (!labels.isEmpty() && isSuc) {
+                    final FileCacheModel fileCacheModel = new FileCacheModel();
+                    fileCacheModel.setModifyDate(mdate);
+                    fileCacheModel.setObject(labels);
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                            FileCacheHelper.save(fileCacheModel, list.hashCode());
+                            LocalFileCache.save(fileCacheModel, list.hashCode());
                         }
                     });
                 }

@@ -4,9 +4,9 @@ import com.wq.constans.Constan;
 import com.wq.model.DirMenu;
 import com.wq.service.ListService;
 import com.wq.service.ListServiceImpl;
+import com.wq.ui.module.MesBox;
 import com.wq.util.FileUtil;
 import com.wq.util.FontUtil;
-import com.wq.ui.module.MesBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,11 +18,10 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wangq
- * Date: 13-5-22
- * Time: 下午3:53
- * To change this template use File | Settings | File Templates.
+ * 目录树右键菜单
+ *
+ * @author wangqing
+ * @since 1.0.0
  */
 public class TreeMenu extends JPopupMenu implements Page {
     private static final Logger log = LoggerFactory.getLogger(TreeMenu.class);
@@ -30,7 +29,7 @@ public class TreeMenu extends JPopupMenu implements Page {
     private ListService listService = ListServiceImpl.getInstance();
 
     public TreeMenu(String filePath) {
-        this.filePath=filePath;
+        this.filePath = filePath;
         constructPlate();
         constructPage();
     }

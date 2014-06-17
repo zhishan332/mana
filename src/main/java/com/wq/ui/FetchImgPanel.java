@@ -15,11 +15,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wangq
- * Date: 13-5-21
- * Time: 下午10:49
  * To change this template use File | Settings | File Templates.
+ * @author wangqing
+ * @since 1.0.0
  */
 public class FetchImgPanel extends JFrame implements Page {
     private static FetchImgPanel fetchImgPanel;

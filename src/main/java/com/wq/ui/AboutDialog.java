@@ -7,11 +7,9 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wangq
- * Date: 12-8-10
- * Time: 下午5:18
  * To change this template use File | Settings | File Templates.
+ * @author wangqing
+ * @since 1.0.0
  */
 public class AboutDialog extends JDialog implements Page {
     private static AboutDialog aboutDialog = null;

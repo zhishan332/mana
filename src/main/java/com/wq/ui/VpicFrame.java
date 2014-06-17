@@ -17,30 +17,28 @@ import java.awt.event.WindowEvent;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wangq
- * Date: 12-8-2
- * Time: 上午10:36
- * To change this template use File | Settings | File Templates.
+ * 最底层的面板，软件启动时初始化该JFrame
+ *
+ * @author wangqing
+ * @since 1.0.0
  */
 public class VpicFrame extends JFrame {
     private static VpicFrame vpic;
-    //    private static LightLog logger = LightLog.getInstance(Vpic.class);
     private CacheService cacheService = CacheServiceImpl.getInstance();
     private JLabel numField;
     private JLabel infoLabel;
     private JSplitPane jSplitPane;
+
+    private VpicFrame() {
+        super("Mana看图-1.0.0");
+        createGUI();
+    }
 
     public static VpicFrame getInstance() {
         if (vpic == null) {
             vpic = new VpicFrame();
         }
         return vpic;
-    }
-
-    private VpicFrame() {
-        super("Mana图管家 1.0.0");
-        createGUI();
     }
 
     public void createGUI() {
@@ -114,7 +112,7 @@ public class VpicFrame extends JFrame {
         JToolBar jToolBar = new JToolBar();
         jToolBar.setFloatable(false);
         jToolBar.setBorderPainted(false); //不画边界
-        jToolBar.setMargin(new Insets(1,20,1,10));
+        jToolBar.setMargin(new Insets(1, 20, 1, 10));
 //        jToolBar.setBackground(Color.BLACK);
         infoLabel = new JLabel("无");
         infoLabel.setPreferredSize(new Dimension(500, 20));
@@ -139,15 +137,15 @@ public class VpicFrame extends JFrame {
                 memoryPanel.repaint();
             }
         });
-        JLabel git =new LinkLabel("GitHub", "https://github.com/zhishan332/mana");
+        JLabel git = new LinkLabel("GitHub", "https://github.com/zhishan332/mana");
         git.setFont(FontUtil.getDefault());
         git.setPreferredSize(new Dimension(70, 20));
         git.setMaximumSize(new Dimension(70, 16));
-        JLabel weibo =new LinkLabel("微博留言", "http://weibo.com/aziqing");
+        JLabel weibo = new LinkLabel("微博留言", "http://weibo.com/aziqing");
         weibo.setFont(FontUtil.getDefault());
         weibo.setPreferredSize(new Dimension(70, 20));
         weibo.setMaximumSize(new Dimension(70, 16));
-        JLabel csdn =new LinkLabel("泊川", "http://blog.csdn.net/wantken");
+        JLabel csdn = new LinkLabel("泊川", "http://blog.csdn.net/wantken");
         csdn.setFont(FontUtil.getDefault());
         csdn.setPreferredSize(new Dimension(70, 20));
         csdn.setMaximumSize(new Dimension(70, 16));

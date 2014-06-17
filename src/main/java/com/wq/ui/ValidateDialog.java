@@ -2,9 +2,9 @@ package com.wq.ui;
 
 import com.wq.cache.SystemCache;
 import com.wq.constans.Constan;
+import com.wq.ui.module.MesBox;
 import com.wq.util.FontUtil;
 import com.wq.util.MD5Util;
-import com.wq.ui.module.MesBox;
 import com.wq.util.SwingUtils;
 
 import javax.swing.*;
@@ -15,11 +15,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- * Created by IntelliJ IDEA.
- * User: wq
- * Date: 11-7-14
- * Time: 11:25
- * To change this template use File | Settings | File Templates.
+ * 密码认证窗体
+ *
+ * @author wangqing
+ * @since 1.0.0
  */
 public class ValidateDialog extends JFrame {
     private JPasswordField jf;
@@ -36,7 +35,7 @@ public class ValidateDialog extends JFrame {
         this.setFont(FontUtil.getDefault());
         this.setLocationRelativeTo(null);
         Toolkit tk = Toolkit.getDefaultToolkit();
-        Image mImage = tk.createImage(Constan.RESPAHT+ "res/img/logo.png");
+        Image mImage = tk.createImage(Constan.RESPAHT + "res/img/logo.png");
         setIconImage(mImage);
         Container con = this.getContentPane();
         con.setLayout(null);

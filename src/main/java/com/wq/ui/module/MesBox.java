@@ -4,11 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Administrator
- * Date: 11-6-24
- * Time: 上午12:27
- * To change this template use File | Settings | File Templates.
+ * 方便的使用JOptionPane
+ *
+ * @author wangqing
+ * @since 1.0.0
  */
 public class MesBox {
     //通用的错误提示框
@@ -18,7 +17,7 @@ public class MesBox {
             mes = "数据有误，请检查";
         }
         Toolkit.getDefaultToolkit().beep();
-        JOptionPane.showMessageDialog(null, "<html><font face='微软雅黑' size='4'>"+mes+"</font></html>", "错误提示", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, "<html><font face='微软雅黑' size='4'>" + mes + "</font></html>", "错误提示", JOptionPane.ERROR_MESSAGE);
     }
 
     //通用的确认框，只有点击确定，才返回true
@@ -27,7 +26,7 @@ public class MesBox {
         if (mes == null || "".equals(mes)) {
             mes = "您确定执行该操作吗";
         }
-        int result = JOptionPane.showConfirmDialog(null, "<html><font face='微软雅黑' size='4'>"+mes+"</font></html>", "提示", JOptionPane.YES_NO_OPTION);
+        int result = JOptionPane.showConfirmDialog(null, "<html><font face='微软雅黑' size='4'>" + mes + "</font></html>", "提示", JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION)
             return true;
         if (result == JOptionPane.NO_OPTION)
@@ -44,17 +43,18 @@ public class MesBox {
         if (mes == null || "".equals(mes)) {
             mes = "操作成功！";
         }
-        JOptionPane.showMessageDialog(null, "<html><font face='微软雅黑' size='4'>"+mes+"</font></html>", "提示", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "<html><font face='微软雅黑' size='4'>" + mes + "</font></html>", "提示", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void success() {
         JOptionPane.showMessageDialog(null, "<html><font face='微软雅黑' size='4'>操作成功</font></html>", "提示", JOptionPane.INFORMATION_MESSAGE);
     }
+
     //通用的警告提示框
     public static void warn(String mes) {
         if (mes == null || "".equals(mes)) {
             mes = "警告！";
         }
-        JOptionPane.showMessageDialog(null, "<html><font face='微软雅黑' size='4'>"+mes+"</font></html>", "提示", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(null, "<html><font face='微软雅黑' size='4'>" + mes + "</font></html>", "提示", JOptionPane.WARNING_MESSAGE);
     }
 }

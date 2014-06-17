@@ -1,22 +1,18 @@
 package com.wq.ui;
 
-import com.wq.constans.Constan;
 import com.wq.util.FontUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wangq
- * Date: 12-8-14
- * Time: 下午1:16
- * 图片属性
+ * 图片属性展示窗体
+ * @author wangqing
+ * @since 1.0.0
  */
+
 public class PropDialog extends JWindow implements Page {
     private static PropDialog propDialog;
     private JLabel picName;//图片名称

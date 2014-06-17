@@ -1,6 +1,6 @@
 package com.wq.ui.module;
 
-import com.wq.cache.FileCacheHelper;
+import com.wq.cache.LocalFileCache;
 import com.wq.cache.SystemCache;
 import com.wq.service.ListServiceImpl;
 import com.wq.ui.VpicFrame;
@@ -54,7 +54,7 @@ public class FolderChooser extends JFileChooser {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    FileCacheHelper.asynIndex();
+                    LocalFileCache.asynIndex();
                 }
             });
         }

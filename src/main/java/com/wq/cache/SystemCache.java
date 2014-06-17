@@ -13,11 +13,10 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wangq
- * Date: 13-5-17
- * Time: 下午3:12
- * To change this template use File | Settings | File Templates.
+ * 系统级别的缓存，用于存储用户的设置信息等
+ *
+ * @author wangqing
+ * @since 1.0.0
  */
 public class SystemCache {
     private static final Logger log = LoggerFactory.getLogger(SystemCache.class);
@@ -25,8 +24,9 @@ public class SystemCache {
     private File dbpath = new File(Constan.DBPATH);
     private SysData data;
     private List<String> validFileCacheList;
+
     private SystemCache() {
-        validFileCacheList=new ArrayList<String>();
+        validFileCacheList = new ArrayList<String>();
     }
 
     public static SystemCache getInstance() {

@@ -19,11 +19,10 @@ import java.io.IOException;
 import java.util.HashSet;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wangq
- * Date: 12-8-3
- * Time: 下午5:28
- * 选项设置
+ * 选项设置窗体
+ *
+ * @author wangqing
+ * @since 1.0.0
  */
 public class SetPanel extends JFrame implements Page {
     private static SetPanel setPanel;
@@ -57,6 +56,7 @@ public class SetPanel extends JFrame implements Page {
     private JPasswordField proxyPasswordField;
     private JCheckBox userProxyBox;
     private JCheckBox isHModeBox;
+
     private SetPanel() {
         constructPlate();
         constructPage();
@@ -98,7 +98,7 @@ public class SetPanel extends JFrame implements Page {
         generalPanelBorder.setTitleFont(FontUtil.getSong12());
         generalPanel.setBorder(generalPanelBorder);
 
-        fileJlable = new JLabel("图片类型：",SwingConstants.RIGHT);
+        fileJlable = new JLabel("图片类型：", SwingConstants.RIGHT);
         fileJlable.setFont(FontUtil.getSong12());
         fileJlable.setBounds(10, 12, 60, 35);
         jpg = new JCheckBox("JPEG文件(*.jpg;*jpeg)", true);
@@ -109,7 +109,7 @@ public class SetPanel extends JFrame implements Page {
         png.setBounds(280, 40, 260, 25);
         gif = new JCheckBox("CompuServe GIF(*.gif)", true);
         gif.setBounds(280, 65, 260, 25);
-        JLabel speedJlable = new JLabel("滚动速度：",SwingConstants.RIGHT);
+        JLabel speedJlable = new JLabel("滚动速度：", SwingConstants.RIGHT);
         speedJlable.setFont(FontUtil.getSong12());
         speedJlable.setBounds(10, 90, 60, 35);
         speed = new JTextField();
@@ -118,7 +118,7 @@ public class SetPanel extends JFrame implements Page {
         JLabel tip = new JLabel("(数值越大越快,默认35,软件重启后生效)");
         tip.setFont(FontUtil.getSong12());
         tip.setBounds(163, 95, 300, 25);
-        JLabel pathJlable = new JLabel("保存路径：",SwingConstants.RIGHT);
+        JLabel pathJlable = new JLabel("保存路径：", SwingConstants.RIGHT);
         pathJlable.setFont(FontUtil.getSong12());
         pathJlable.setBounds(10, 120, 60, 35);
         savePath = new JTextField();
@@ -158,10 +158,10 @@ public class SetPanel extends JFrame implements Page {
         autoFit = new JCheckBox("图片自适应");
         autoFit.setFont(FontUtil.getSong12());
         autoFit.setBounds(10, 215, 150, 25);
-        isHModeBox=new JCheckBox("水平浏览模式(软件重启后生效)");
+        isHModeBox = new JCheckBox("水平浏览模式(软件重启后生效)");
         isHModeBox.setFont(FontUtil.getSong12());
         isHModeBox.setBounds(160, 215, 260, 25);
-        passJlable = new JLabel("设置密码：",SwingConstants.RIGHT);
+        passJlable = new JLabel("设置密码：", SwingConstants.RIGHT);
         passJlable.setFont(FontUtil.getSong12());
         passJlable.setBounds(10, 245, 60, 35);
         jf = new JPasswordField();

@@ -2,6 +2,7 @@ package com.wq.util;
 
 import com.wq.cache.AllCache;
 import com.wq.cache.SystemCache;
+import com.wq.exception.ManaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,20 +13,20 @@ import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wangq
- * Date: 14-6-14
- * Time: 下午9:39
  * To change this template use File | Settings | File Templates.
+ *
+ * @author wangqing
+ * @since 1.0.0
  */
 public class ImageLabelUtil {
     private static final Logger log = LoggerFactory.getLogger(ImageLabelUtil.class);
+
     /**
      * 处理一般图片
      *
-     * @param path
+     * @param path 图片路径
      */
-    public static JLabel getImageLabel(final String path) {
+    public static JLabel getImageLabel(final String path) throws ManaException {
         BufferedImage bufferedImage = null;
         com.wq.model.SysData data = SystemCache.getInstance().getData();
         boolean isgif = false;
@@ -35,11 +36,12 @@ public class ImageLabelUtil {
             Toolkit tk = Toolkit.getDefaultToolkit();
             img = tk.createImage(path);
             bufferedImage = ImageUtils.toBufferedImage(img);
-        }else{
+        } else {
             try {
                 bufferedImage = ImageIO.read(new FileInputStream(path));
             } catch (Throwable e) {
                 log.error("读取图片异常", e);
+                throw new ManaException("内存不足，加载图片失败");
             }
         }
         if (bufferedImage == null) return null;

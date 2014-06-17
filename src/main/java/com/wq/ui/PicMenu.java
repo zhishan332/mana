@@ -23,11 +23,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wangq
- * Date: 12-8-3
- * Time: 下午1:47
  * 右键图片菜单
+ * @author wangqing
+ * @since 1.0.0
  */
 public class PicMenu extends JPopupMenu implements Page {
     private static final Logger log = LoggerFactory.getLogger(PicMenu.class);

@@ -1,4 +1,4 @@
-package com.wq.ui;
+package com.wq.ui.module;
 
 import com.wq.constans.Constan;
 
@@ -9,11 +9,10 @@ import javax.swing.tree.TreeNode;
 import java.awt.*;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wangq
- * Date: 12-8-8
- * Time: 下午4:29
- * JTREE的图标渲染
+ * Jtree的图标渲染
+ *
+ * @author wangqing
+ * @since 1.0.0
  */
 public class VipcTreeCellRenderer extends DefaultTreeCellRenderer {
     @Override

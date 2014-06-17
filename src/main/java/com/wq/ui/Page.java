@@ -1,11 +1,9 @@
 package com.wq.ui;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wangq
- * Date: 12-8-2
- * Time: 下午3:56
  * To change this template use File | Settings | File Templates.
+ * @author wangqing
+ * @since 1.0.0
  */
 public interface Page {
     /**

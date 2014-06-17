@@ -10,11 +10,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wangq
- * Date: 12-8-14
- * Time: 下午5:33
  * To change this template use File | Settings | File Templates.
+ * @author wangqing
+ * @since 1.0.0
  */
 public class FirstDialog extends JDialog implements Page {
     private Container con;//容器

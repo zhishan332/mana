@@ -2,7 +2,7 @@ package com.wq.run;
 
 import com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel;
 import com.wq.cache.AllCache;
-import com.wq.cache.FileCacheHelper;
+import com.wq.cache.LocalFileCache;
 import com.wq.cache.SystemCache;
 import com.wq.ui.FirstDialog;
 import com.wq.ui.ValidateDialog;
@@ -49,6 +49,6 @@ public class StartUi {
                 }
             }
         });
-        FileCacheHelper.asynIndex();//异步构建缓存索引
+        LocalFileCache.asynIndex();//异步构建缓存索引
     }
 }

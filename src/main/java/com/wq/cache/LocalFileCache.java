@@ -1,6 +1,7 @@
 package com.wq.cache;
 
 import com.wq.constans.Constan;
+import com.wq.exception.ManaException;
 import com.wq.model.FileCacheModel;
 import com.wq.service.CacheServiceImpl;
 import com.wq.util.ImageLabelUtil;
@@ -18,14 +19,13 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wangq
- * Date: 14-6-14
- * Time: 下午2:17
- * To change this template use File | Settings | File Templates.
+ * 本地的文件缓存，用于构建图片索引，加快图片读取速度
+ *
+ * @author wangqing
+ * @since 1.0.0
  */
-public class FileCacheHelper {
-    private static final Logger log = LoggerFactory.getLogger(FileCacheHelper.class);
+public class LocalFileCache {
+    private static final Logger log = LoggerFactory.getLogger(LocalFileCache.class);
     private static String cachePath = Constan.CACHEPATH;
     private static String suffix = ".dat";
     private static int BUFFER = 1024 * 10;
@@ -135,7 +135,7 @@ public class FileCacheHelper {
             @Override
             public void run() {
                 log.info("开始构建缓存>>>>>>>>>>>>");
-                FileCacheHelper.index();//构建缓存索引
+                LocalFileCache.index();//构建缓存索引
             }
         });
     }
@@ -173,15 +173,22 @@ public class FileCacheHelper {
         File ff = new File(cachePath + newName + suffix);
         if (ff.exists()) return hashCode;
         List<JLabel> labels = new ArrayList<JLabel>();
+        boolean isSuc=true;
         for (String path : tempList) {
-            JLabel imgLabel = ImageLabelUtil.getImageLabel(path);
+            JLabel imgLabel;
+            try {
+                imgLabel = ImageLabelUtil.getImageLabel(path);
+            } catch (ManaException e) {
+                isSuc=false;
+                break;
+            }
             labels.add(imgLabel);
         }
-        if (!labels.isEmpty()) {
+        if (!labels.isEmpty() && isSuc) {
             final FileCacheModel fileCacheModel = new FileCacheModel();
             fileCacheModel.setModifyDate(mdate);
             fileCacheModel.setObject(labels);
-            FileCacheHelper.save(fileCacheModel, hashCode);
+            LocalFileCache.save(fileCacheModel, hashCode);
         }
         return hashCode;
     }
@@ -224,10 +231,10 @@ public class FileCacheHelper {
         mod.setModifyDate(1231231231);
         mod.setObject(clist);
         long beg = System.currentTimeMillis();
-        FileCacheHelper.save(mod, 1111111111);
+        LocalFileCache.save(mod, 1111111111);
         long end = System.currentTimeMillis();
         System.out.println(end - beg);
-        FileCacheHelper.get(1111111111);
+        LocalFileCache.get(1111111111);
         long end2 = System.currentTimeMillis();
         System.out.println(end2 - end);
     }

@@ -2,7 +2,7 @@ package com.wq.ui;
 
 import com.sun.awt.AWTUtilities;
 import com.wq.cache.AllCache;
-import com.wq.cache.FileCacheHelper;
+import com.wq.cache.LocalFileCache;
 import com.wq.cache.SystemCache;
 import com.wq.constans.Constan;
 import com.wq.model.DirMenu;
@@ -12,6 +12,7 @@ import com.wq.service.ListService;
 import com.wq.service.ListServiceImpl;
 import com.wq.ui.module.FolderChooser;
 import com.wq.ui.module.MesBox;
+import com.wq.ui.module.VipcTreeCellRenderer;
 import com.wq.util.FontUtil;
 import com.wq.util.JTreeUtil;
 import org.slf4j.Logger;
@@ -34,11 +35,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wangq
- * Date: 12-8-2
- * Time: 上午11:28
  * To change this template use File | Settings | File Templates.
+ * @author wangqing
+ * @since 1.0.0
  */
 public class ListPanel extends JPanel implements Page {
     private static final Logger log = LoggerFactory.getLogger(ListPanel.class);
@@ -177,7 +176,7 @@ public class ListPanel extends JPanel implements Page {
             public void actionPerformed(ActionEvent e) {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        FileCacheHelper.deleteDirty();
+                        LocalFileCache.deleteDirty();
                         MesBox.success("清理完成");
                     }
                 });

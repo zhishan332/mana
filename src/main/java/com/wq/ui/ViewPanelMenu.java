@@ -8,17 +8,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wangq
- * Date: 12-8-3
- * Time: 下午1:22
  * 面板右键菜单
+ *
+ * @author wangqing
+ * @since 1.0.0
  */
 public class ViewPanelMenu extends JPopupMenu implements Page {
     private static ViewPanelMenu viewPanelMenu = null;
     private JMenuItem hideItem;
     private JMenuItem showItem;
-    private JMenuItem saveItem;
 
     private ViewPanelMenu() {
         constructPlate();
@@ -40,15 +38,6 @@ public class ViewPanelMenu extends JPopupMenu implements Page {
 
     @Override
     public void constructPage() {
-        saveItem = new JMenuItem("全部保存");
-        saveItem.setFont(FontUtil.getSong12());
-        saveItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-        saveItem.setEnabled(false);
-//        this.add(saveItem);//TODO
         hideItem = new JMenuItem("隐藏右方菜单",new ImageIcon(Constan.RESPAHT + "res/img/left.png"));
         hideItem.setFont(FontUtil.getSong12());
         hideItem.addActionListener(new java.awt.event.ActionListener() {

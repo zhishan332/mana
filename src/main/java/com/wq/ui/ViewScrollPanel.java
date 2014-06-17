@@ -8,16 +8,20 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wangq
- * Date: 12-8-2
- * Time: 上午11:25
- * 滚动容器
+ * 用于放置图片的JScrollPane
+ *
+ * @author wangqing
+ * @since 1.0.0
  */
 public class ViewScrollPanel extends JScrollPane implements Page {
     private static ViewScrollPanel viewPanel;
     private ViewContentPanel viewContentPanel;
     private com.wq.model.SysData data = SystemCache.getInstance().getData();
+
+    private ViewScrollPanel() {
+        constructPlate();
+        constructPage();
+    }
 
     public static ViewScrollPanel getInstance() {
         if (viewPanel == null) {
@@ -26,17 +30,12 @@ public class ViewScrollPanel extends JScrollPane implements Page {
         return viewPanel;
     }
 
-    private ViewScrollPanel() {
-        constructPlate();
-        constructPage();
-    }
-
     public void constructPlate() {
-        if (data.isHMode()){
+        if (data.isHMode()) {
             this.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);//垂直滚动条适时出现
             this.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);//水平滚动条适时出现
             this.getHorizontalScrollBar().setUnitIncrement(SystemCache.getInstance().getData().getSpeed());//滚动速度
-        }else{
+        } else {
             this.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);//垂直滚动条适时出现
             this.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);//水平滚动条适时出现
             this.getVerticalScrollBar().setUnitIncrement(SystemCache.getInstance().getData().getSpeed());//滚动速度
@@ -89,12 +88,12 @@ public class ViewScrollPanel extends JScrollPane implements Page {
         Map<String, List<String>> map = AllCache.getInstance().getMenu();
         if (map == null || map.size() == 0) {
 //            ViewContentPanel.getInstance().setList(null);
-            this.setViewportView(new ViewContentPanel(null,null,0));
+            this.setViewportView(new ViewContentPanel(null, null, 0));
 //            this.setViewportView(ViewContentPanel.getInstance());
         } else {
             for (Map.Entry<String, java.util.List<String>> entry : map.entrySet()) {
                 List<String> list = entry.getValue();
-                this.viewContentPanel = new ViewContentPanel(entry.getKey(),list,0);
+                this.viewContentPanel = new ViewContentPanel(entry.getKey(), list, 0);
 //                ViewContentPanel viewContentPanel2 = ViewContentPanel.getInstance();
 //                viewContentPanel2.setList(list);
                 this.setViewportView(viewContentPanel);
