@@ -1,11 +1,11 @@
 package com.wq.ui;
 
 import com.wq.cache.FileCacheHelper;
+import com.wq.cache.SystemCache;
 import com.wq.constans.Constan;
 import com.wq.model.FileCacheModel;
 import com.wq.service.ListService;
 import com.wq.service.ListServiceImpl;
-import com.wq.cache.SystemCache;
 import com.wq.util.ButtonUtil;
 import com.wq.util.FontUtil;
 import com.wq.util.ImageLabelUtil;
@@ -32,15 +32,16 @@ import java.util.List;
 public class ViewContentPanel extends JPanel implements Page {
     private static final Logger log = LoggerFactory.getLogger(ViewContentPanel.class);
     private JLabel jWaitLabel = new JLabel();
-    private ListService listService= ListServiceImpl.getInstance();
+    private ListService listService = ListServiceImpl.getInstance();
     private com.wq.model.SysData data = SystemCache.getInstance().getData();
     private List<String> list = new LinkedList<String>();
     private int start;
     private String folder;
-    public ViewContentPanel(String folder,List<String> list,int start) {
+
+    public ViewContentPanel(String folder, List<String> list, int start) {
         this.list = list;
-        this.start=start;
-        this.folder=folder;
+        this.start = start;
+        this.folder = folder;
         constructPlate();
         constructPage();
     }
@@ -59,34 +60,33 @@ public class ViewContentPanel extends JPanel implements Page {
         this.setBackground(Constan.lightColor);
     }
 
-
     @Override
     public void constructPage() {
         log.info("开始加载图片....................");
-        if(list!=null && !list.isEmpty() && list.size()>5){
+        if (list != null && !list.isEmpty() && list.size() > 5) {
             showWait();
         }
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                if(list==null){
+                if (list == null) {
                     log.warn("图片list为空");
                     return;
                 }
-                long beg=System.currentTimeMillis();
-                List<String> loadList=new ArrayList<String>();
-                for(int i=start;i<list.size()&&i<start+10;i++){
+                long beg = System.currentTimeMillis();
+                List<String> loadList = new ArrayList<String>();
+                for (int i = start; i < list.size() && i < start + 10; i++) {
                     loadList.add(list.get(i));
                 }
-                if(start>0){
-                    addPreButton(list,start);
+                if (start > 0) {
+                    addPreButton(list, start);
                 }
                 loadPic(loadList);
                 hideWait();
-                if(list.size()>(start+10)){
-                    addNextButton(list,start);
+                if (list.size() > (start + 10)) {
+                    addNextButton(list, start);
                 }
-                log.info("图片加载完成，耗时："+(System.currentTimeMillis()-beg)+"ms");
+                log.info("图片加载完成，耗时：" + (System.currentTimeMillis() - beg) + "ms");
             }
         });
 
@@ -107,41 +107,40 @@ public class ViewContentPanel extends JPanel implements Page {
         });
     }
 
-
     public void loadPic(final List<String> list) {
         if (list != null) {
-            File folderFile=new File(folder);
-            final long mdate= folderFile.lastModified();
-            final long hashCode=list.hashCode();
-            log.info("查询缓存，hashcode:"+hashCode+"，修改时间："+mdate);
+            File folderFile = new File(folder);
+            final long mdate = folderFile.lastModified();
+            final long hashCode = list.hashCode();
+            log.info("查询缓存，hashcode:" + hashCode + "，修改时间：" + mdate);
             FileCacheModel cache = FileCacheHelper.get(hashCode);
-            if(null!=cache){
-                log.info("命中缓存，缓存修改时间："+cache.getModifyDate()+",当前修改时间："+mdate);
+            if (null != cache) {
+                log.info("命中缓存，缓存修改时间：" + cache.getModifyDate() + ",当前修改时间：" + mdate);
             }
-            List<JLabel> labels=new ArrayList<JLabel>();
-            if(cache!=null && cache.getModifyDate()==mdate){
+            List<JLabel> labels = new ArrayList<JLabel>();
+            if (cache != null && cache.getModifyDate() == mdate) {
                 log.info("从res/cache下加载图片>>>>>>>>>>>>>>>>>>");
-                labels= (List<JLabel>) cache.getObject();
-            }else{
+                labels = (List<JLabel>) cache.getObject();
+            } else {
                 for (final String path : list) {
                     File file = new File(path);
                     if (!file.exists()) continue;
                     JLabel imgLabel = ImageLabelUtil.getImageLabel(path);
-                    if(null!=imgLabel) labels.add(imgLabel);
+                    if (null != imgLabel) labels.add(imgLabel);
                 }
-                final FileCacheModel fileCacheModel=new FileCacheModel();
+                final FileCacheModel fileCacheModel = new FileCacheModel();
                 fileCacheModel.setModifyDate(mdate);
                 fileCacheModel.setObject(labels);
-               if(!labels.isEmpty()){
-                   SwingUtilities.invokeLater(new Runnable() {
-                       @Override
-                       public void run() {
-                           FileCacheHelper.save(fileCacheModel, list.hashCode());
-                       }
-                   });
-               }
+                if (!labels.isEmpty()) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            FileCacheHelper.save(fileCacheModel, list.hashCode());
+                        }
+                    });
+                }
             }
-            for(final JLabel jLabel:labels){
+            for (final JLabel jLabel : labels) {
                 jLabel.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
@@ -180,7 +179,7 @@ public class ViewContentPanel extends JPanel implements Page {
         this.validate();
     }
 
-    private void showWait(){
+    private void showWait() {
         jWaitLabel.setFont(FontUtil.getSong13());
         jWaitLabel.setText("<html><h1>图片略多，正在加载(waiting..)</h1>");
         jWaitLabel.setForeground(Color.white);
@@ -189,29 +188,44 @@ public class ViewContentPanel extends JPanel implements Page {
         this.validate();
     }
 
-    private void hideWait(){
+    private void hideWait() {
         this.remove(jWaitLabel);
         this.validate();
     }
-    private void addPreButton(final List<String> list, final int start){
-        JButton preButton = ButtonUtil.createJButton(Constan.RESPAHT + "res/img/pre.png", null, new AbstractAction() {
+
+    private void addPreButton(final List<String> list, final int start) {
+        String imgPath = Constan.RESPAHT + "res/img/lt.png";
+        String pressImgPath = Constan.RESPAHT + "res/img/lt-b.png";
+        if (!data.isHMode()) {
+            imgPath = Constan.RESPAHT + "res/img/vlt.png";
+            pressImgPath = Constan.RESPAHT + "res/img/vlt-b.png";
+        }
+        JButton preButton = ButtonUtil.createJButton(imgPath, null, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                listService.loadPic(folder,list,start-10);
+                listService.loadPic(folder, list, start - 10);
             }
         });
+        preButton.setPressedIcon(new ImageIcon(pressImgPath));
         preButton.setToolTipText("上一页");
         this.add(preButton);
         this.validate();
     }
 
-    private void addNextButton(final List<String> list, final int start){
-        JButton nextButton = ButtonUtil.createJButton(Constan.RESPAHT + "res/img/next.png", null, new AbstractAction() {
+    private void addNextButton(final List<String> list, final int start) {
+        String imgPath = Constan.RESPAHT + "res/img/rt.png";
+        String pressImgPath = Constan.RESPAHT + "res/img/rt-b.png";
+        if (!data.isHMode()) {
+            imgPath = Constan.RESPAHT + "res/img/vrt.png";
+            pressImgPath = Constan.RESPAHT + "res/img/vrt-b.png";
+        }
+        JButton nextButton = ButtonUtil.createJButton(imgPath, null, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                listService.loadPic(folder,list, start + 10);
+                listService.loadPic(folder, list, start + 10);
             }
         });
+        nextButton.setPressedIcon(new ImageIcon(pressImgPath));
         nextButton.setToolTipText("下一页");
         this.add(nextButton);
         this.validate();

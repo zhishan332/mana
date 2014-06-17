@@ -6,7 +6,7 @@ import com.wq.service.FetchService;
 import com.wq.service.FetchServiceImpl;
 import com.wq.service.ListServiceImpl;
 import com.wq.util.FontUtil;
-import com.wq.util.MesBox;
+import com.wq.ui.module.MesBox;
 
 import javax.swing.*;
 import java.awt.*;

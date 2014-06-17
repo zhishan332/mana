@@ -3,6 +3,7 @@ package com.wq.ui;
 import com.sun.awt.AWTUtilities;
 import com.wq.cache.SystemCache;
 import com.wq.constans.Constan;
+import com.wq.ui.module.MesBox;
 import com.wq.util.FileUtil;
 import com.wq.util.FontUtil;
 import com.wq.util.ImageUtils;
@@ -113,7 +114,6 @@ public class PicMenu extends JPopupMenu implements Page {
                 ImageUtils.copy(image);
             }
         });
-        this.add(copyItem);
         JMenuItem saveAsItem = new JMenuItem("另存为");
         saveAsItem.setFont(FontUtil.getDefault());
         saveAsItem.addActionListener(new java.awt.event.ActionListener() {
@@ -132,7 +132,7 @@ public class PicMenu extends JPopupMenu implements Page {
                 }
             }
         });
-        this.add(saveAsItem);
+
         JMenuItem delItem = new JMenuItem("删除(慎：磁盘删除)", new ImageIcon(Constan.RESPAHT + "res/img/del.png"));
         delItem.setFont(FontUtil.getDefault());
         delItem.addActionListener(new java.awt.event.ActionListener() {
@@ -142,7 +142,10 @@ public class PicMenu extends JPopupMenu implements Page {
                 if (jLabel != null) {
                     ViewScrollPanel.getInstance().getViewContentPanel().remove(jLabel);
                     if (file.exists()) {
-                        file.deleteOnExit();
+                        boolean flag = file.delete();
+                        if(!flag){
+                            MesBox.warn("删除失败，请到磁盘删除");
+                        }
                     }
 //                        ViewContentPanel.getInstance().remove(jLabel); //移除组件刷新
                     jLabel = null;
@@ -151,7 +154,7 @@ public class PicMenu extends JPopupMenu implements Page {
 //                    ViewContentPanel.getInstance().updateUI();
             }
         });
-        this.add(delItem);
+
         JMenuItem openItem = new JMenuItem("文件夹中显示", new ImageIcon(Constan.RESPAHT + "res/img/fire.png"));
         openItem.setFont(FontUtil.getDefault());
         openItem.addActionListener(new java.awt.event.ActionListener() {
@@ -166,6 +169,9 @@ public class PicMenu extends JPopupMenu implements Page {
             }
         });
         this.add(openItem);
+        this.add(copyItem);
+        this.add(saveAsItem);
+        this.add(delItem);
         this.add(new JPopupMenu.Separator());
         JMenuItem propItem = new JMenuItem("属性");
         propItem.setFont(FontUtil.getDefault());

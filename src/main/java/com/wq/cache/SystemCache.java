@@ -7,7 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -22,8 +24,9 @@ public class SystemCache {
     private static SystemCache systemCache = null;
     private File dbpath = new File(Constan.DBPATH);
     private SysData data;
-
+    private List<String> validFileCacheList;
     private SystemCache() {
+        validFileCacheList=new ArrayList<String>();
     }
 
     public static SystemCache getInstance() {
@@ -105,6 +108,14 @@ public class SystemCache {
         } catch (IOException e) {
             log.error("写入系统缓存失败", e);
         }
+    }
+
+    public List<String> getValidFileCacheList() {
+        return validFileCacheList;
+    }
+
+    public void setValidFileCacheList(List<String> validFileCacheList) {
+        this.validFileCacheList = validFileCacheList;
     }
 }
 

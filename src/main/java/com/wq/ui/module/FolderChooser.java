@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
 
 /**
  * To change this template use File | Settings | File Templates.
@@ -43,25 +42,21 @@ public class FolderChooser extends JFileChooser {
         this.setMultiSelectionEnabled(true);//可以选择多个文件
         int index = this.showDialog(VpicFrame.getInstance(), "确定");
         if (index == JFileChooser.APPROVE_OPTION) {
-            try {
-                File[] files = this.getSelectedFiles();
-                if(files==null || files.length==0 ) return;
-                SystemCache.getInstance().getData().
-                        setLastOpenPath(this.getCurrentDirectory().getCanonicalPath());
-                SystemCache.getInstance().update();
-                for (File sFile : files) {
-                    ListServiceImpl.getInstance().addTreeData(sFile.getCanonicalPath());
-                }
-                ListServiceImpl.getInstance().reloadTreeData();
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        FileCacheHelper.asynIndex();
-                    }
-                });
-            } catch (IOException e1) {
-                log.error("选择文件夹失败", e1);
+            File[] files = this.getSelectedFiles();
+            if (files == null || files.length == 0) return;
+            SystemCache.getInstance().getData().
+                    setLastOpenPath(this.getCurrentDirectory().getAbsolutePath());
+            SystemCache.getInstance().update();
+            for (File sFile : files) {
+                ListServiceImpl.getInstance().addTreeData(sFile.getAbsolutePath());
             }
+            ListServiceImpl.getInstance().reloadTreeData();
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    FileCacheHelper.asynIndex();
+                }
+            });
         }
     }
 }

@@ -2,7 +2,6 @@ package com.wq.cache;
 
 import com.wq.constans.Constan;
 import com.wq.model.FileCacheModel;
-import com.wq.service.CacheService;
 import com.wq.service.CacheServiceImpl;
 import com.wq.util.ImageLabelUtil;
 import org.slf4j.Logger;
@@ -135,22 +134,19 @@ public class FileCacheHelper {
         pool.execute(new Runnable() {
             @Override
             public void run() {
-                long beg = System.currentTimeMillis();
                 log.info("开始构建缓存>>>>>>>>>>>>");
                 FileCacheHelper.index();//构建缓存索引
-                log.info("构建缓存索引完成>,本次耗时：" + (System.currentTimeMillis() - beg));
             }
         });
     }
 
     public static void index() {
-        CacheService cacheService = CacheServiceImpl.getInstance();
-        Map<String, List<String>> map = cacheService.getAllPic();
+        Map<String, List<String>> map = CacheServiceImpl.getInstance().getAllPic();
         ExecutorService pool = Executors.newFixedThreadPool(2);
         for (final Map.Entry<String, List<String>> entry : map.entrySet()) {
             final List<String> list = entry.getValue();
             for (int i = 0; i < list.size(); i += 10) {
-                final int st=i;
+                final int st = i;
                 pool.execute(new Runnable() {
                     @Override
                     public void run() {
@@ -173,6 +169,7 @@ public class FileCacheHelper {
         final long mdate = folderFile.lastModified();
         final long hashCode = tempList.hashCode();
         String newName = String.valueOf(hashCode);
+        SystemCache.getInstance().getValidFileCacheList().add(newName + suffix);
         File ff = new File(cachePath + newName + suffix);
         if (ff.exists()) return hashCode;
         List<JLabel> labels = new ArrayList<JLabel>();
@@ -191,35 +188,25 @@ public class FileCacheHelper {
 
     //删除无用的缓存
     public static void deleteDirty() {
-        List<String> validList = new ArrayList<String>();
-        Map<String, List<String>> map = CacheServiceImpl.getInstance().getAllPic();
-        for (final Map.Entry<String, List<String>> entry : map.entrySet()) {
-            final List<String> list = entry.getValue();
-            for (int i = 0; i < list.size(); i += 10) {
-                List<String> tempList = new ArrayList<String>();
-                for (int t = i; t < list.size() && t < i + 10; t++) {
-                    tempList.add(list.get(i));
-                }
-                long hashcode = tempList.hashCode();
-                String newName = String.valueOf(hashcode);
-                validList.add(newName + suffix);
-            }
-        }
         File cf = new File(cachePath);
         File[] files = cf.listFiles();
-        int i=0;
+        int i = 0;
         if (files != null) {
             for (File file : files) {
                 String name = file.getName();
-                log.debug("validList:"+validList.size()+",filename:"+name);
-                if (!validList.contains(name)) {
-                    file.deleteOnExit();
-                    log.info("删除无用缓存文件：" + file.getName());
-                    i++;
+//                log.debug("validList:"+ SystemCache.getInstance().getValidFileCacheList().size()+",filename:"+name);
+                if (!SystemCache.getInstance().getValidFileCacheList().contains(name)) {
+                    boolean flag = file.delete();
+                    if (flag) {
+                        i++;
+                        log.info("删除无用缓存文件成功：" + file.getName());
+                    } else {
+                        log.info("删除无用缓存文件失败：" + file.getName());
+                    }
                 }
             }
         }
-        log.info("清理缓存文件完成,删除缓存个数："+i);
+        log.info("清理缓存文件完成,删除缓存个数：" + i);
     }
 
     public static void main(String[] args) throws Exception {

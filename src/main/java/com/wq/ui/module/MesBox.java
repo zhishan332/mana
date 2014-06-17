@@ -1,4 +1,4 @@
-package com.wq.util;
+package com.wq.ui.module;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +18,7 @@ public class MesBox {
             mes = "数据有误，请检查";
         }
         Toolkit.getDefaultToolkit().beep();
-        JOptionPane.showMessageDialog(null, mes, "错误提示", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, "<html><font face='微软雅黑' size='4'>"+mes+"</font></html>", "错误提示", JOptionPane.ERROR_MESSAGE);
     }
 
     //通用的确认框，只有点击确定，才返回true
@@ -27,7 +27,7 @@ public class MesBox {
         if (mes == null || "".equals(mes)) {
             mes = "您确定执行该操作吗";
         }
-        int result = JOptionPane.showConfirmDialog(null, mes, "提示", JOptionPane.YES_NO_OPTION);
+        int result = JOptionPane.showConfirmDialog(null, "<html><font face='微软雅黑' size='4'>"+mes+"</font></html>", "提示", JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION)
             return true;
         if (result == JOptionPane.NO_OPTION)
@@ -44,17 +44,17 @@ public class MesBox {
         if (mes == null || "".equals(mes)) {
             mes = "操作成功！";
         }
-        JOptionPane.showMessageDialog(null, mes, "提示", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "<html><font face='微软雅黑' size='4'>"+mes+"</font></html>", "提示", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void success() {
-        JOptionPane.showMessageDialog(null, "操作成功!", "提示", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "<html><font face='微软雅黑' size='4'>操作成功</font></html>", "提示", JOptionPane.INFORMATION_MESSAGE);
     }
     //通用的警告提示框
     public static void warn(String mes) {
         if (mes == null || "".equals(mes)) {
             mes = "警告！";
         }
-        JOptionPane.showMessageDialog(null, mes, "提示", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(null, "<html><font face='微软雅黑' size='4'>"+mes+"</font></html>", "提示", JOptionPane.WARNING_MESSAGE);
     }
 }

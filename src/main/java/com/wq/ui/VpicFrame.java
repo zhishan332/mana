@@ -1,10 +1,10 @@
 package com.wq.ui;
 
 import com.wq.cache.AllCache;
-import com.wq.cache.FileCacheHelper;
 import com.wq.constans.Constan;
 import com.wq.service.CacheService;
 import com.wq.service.CacheServiceImpl;
+import com.wq.ui.module.LinkLabel;
 import com.wq.util.ButtonUtil;
 import com.wq.util.FileUtil;
 import com.wq.util.FontUtil;
@@ -114,6 +114,7 @@ public class VpicFrame extends JFrame {
         JToolBar jToolBar = new JToolBar();
         jToolBar.setFloatable(false);
         jToolBar.setBorderPainted(false); //不画边界
+        jToolBar.setMargin(new Insets(1,20,1,10));
 //        jToolBar.setBackground(Color.BLACK);
         infoLabel = new JLabel("无");
         infoLabel.setPreferredSize(new Dimension(500, 20));
@@ -138,16 +139,28 @@ public class VpicFrame extends JFrame {
                 memoryPanel.repaint();
             }
         });
-        JLabel weibo = new JLabel("反馈：http://weibo.com/aziqing",SwingConstants.RIGHT);
+        JLabel git =new LinkLabel("GitHub", "https://github.com/zhishan332/mana");
+        git.setFont(FontUtil.getDefault());
+        git.setPreferredSize(new Dimension(70, 20));
+        git.setMaximumSize(new Dimension(70, 16));
+        JLabel weibo =new LinkLabel("微博留言", "http://weibo.com/aziqing");
         weibo.setFont(FontUtil.getDefault());
-        weibo.setPreferredSize(new Dimension(300, 20));
-        weibo.setMaximumSize(new Dimension(300, 16));
-//        jToolBar.addSeparator();
+        weibo.setPreferredSize(new Dimension(70, 20));
+        weibo.setMaximumSize(new Dimension(70, 16));
+        JLabel csdn =new LinkLabel("泊川", "http://blog.csdn.net/wantken");
+        csdn.setFont(FontUtil.getDefault());
+        csdn.setPreferredSize(new Dimension(70, 20));
+        csdn.setMaximumSize(new Dimension(70, 16));
         jToolBar.add(infoLabel);
         jToolBar.add(numField);
+        jToolBar.addSeparator();
+        jToolBar.add(git);
+        jToolBar.add(weibo);
+        jToolBar.add(csdn);
+        jToolBar.addSeparator();
         jToolBar.add(memoryPanel);
         jToolBar.add(rubBtn);
-        jToolBar.add(weibo);
+        jToolBar.addSeparator();
         jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true);
         jSplitPane.setBorder(null);
         jSplitPane.setDividerSize(8);
@@ -157,7 +170,6 @@ public class VpicFrame extends JFrame {
         jSplitPane.add(ViewScrollPanel.getInstance(), JSplitPane.RIGHT);
         this.add(BorderLayout.CENTER, jSplitPane);
         this.add(BorderLayout.SOUTH, jToolBar);
-
 //        this.add(BorderLayout.CENTER, ViewScrollPanel.getInstance());
 //        this.add(BorderLayout.WEST, ListPanel.getInstance());
     }

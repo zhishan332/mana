@@ -11,6 +11,7 @@ import com.wq.service.CacheServiceImpl;
 import com.wq.service.ListService;
 import com.wq.service.ListServiceImpl;
 import com.wq.ui.module.FolderChooser;
+import com.wq.ui.module.MesBox;
 import com.wq.util.FontUtil;
 import com.wq.util.JTreeUtil;
 import org.slf4j.Logger;
@@ -41,16 +42,15 @@ import java.util.Set;
  */
 public class ListPanel extends JPanel implements Page {
     private static final Logger log = LoggerFactory.getLogger(ListPanel.class);
+    private static ListPanel listPanel;
+    private final MemoryPanel memoryPanel = new MemoryPanel();
     private JScrollPane listPanelContainer;
     private DefaultMutableTreeNode root, child, chosen;
     private JTree tree;
     private DefaultTreeModel model;
-    private static ListPanel listPanel;
     private ListService listService = ListServiceImpl.getInstance();
     private CacheService cacheService = CacheServiceImpl.getInstance();
-    //    private static LightLog logger = LightLog.getInstance(ListPanel.class);
     private int flag = 0;//标志位，防止树被选中后自动加载图片
-    private final MemoryPanel memoryPanel = new MemoryPanel();
     private TreePath lastTreePath;
 
     private ListPanel() {
@@ -67,9 +67,9 @@ public class ListPanel extends JPanel implements Page {
 
     public void constructPlate() {
         this.setLayout(new BorderLayout());
-        this.setPreferredSize(new Dimension(260, 1000));
-        this.setSize(new Dimension(260, 1000));
-        this.setMinimumSize(new Dimension(260, 1000));
+        this.setPreferredSize(new Dimension(280, 1000));
+        this.setSize(new Dimension(280, 1000));
+        this.setMinimumSize(new Dimension(280, 1000));
         Timer timer = new Timer(2000, new ActionListener() {
             public void actionPerformed(ActionEvent actionevent) {
                 memoryPanel.repaint();
@@ -82,7 +82,7 @@ public class ListPanel extends JPanel implements Page {
         JToolBar toolBar = new JToolBar();
         toolBar.setFloatable(false);
         toolBar.setBorderPainted(false); //不画边界
-        JButton addBtn = new JButton("添加",new ImageIcon(Constan.RESPAHT + "res/img/add.png"));
+        JButton addBtn = new JButton("添加", new ImageIcon(Constan.RESPAHT + "res/img/add.png"));
         addBtn.setToolTipText("添加文件夹");
         addBtn.setFont(FontUtil.getDefault());
         addBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -91,7 +91,7 @@ public class ListPanel extends JPanel implements Page {
             }
         });
 
-        JButton setBtn = new JButton("设置",new ImageIcon(Constan.RESPAHT + "res/img/set.png"));
+        JButton setBtn = new JButton("设置", new ImageIcon(Constan.RESPAHT + "res/img/set.png"));
         setBtn.setToolTipText("设置");
         setBtn.setFont(FontUtil.getDefault());
         setBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -158,7 +158,7 @@ public class ListPanel extends JPanel implements Page {
 //                FetchImgPanel.getInstance().setVisible(true);
 //            }
 //        });
-        JButton reBtn = new JButton("刷新",new ImageIcon(Constan.RESPAHT + "res/img/refresh.gif"));
+        JButton reBtn = new JButton("刷新", new ImageIcon(Constan.RESPAHT + "res/img/refresh.gif"));
         reBtn.setToolTipText("刷新文件夹");
         reBtn.setFont(FontUtil.getDefault());
         reBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -170,7 +170,7 @@ public class ListPanel extends JPanel implements Page {
                 }
             }
         });
-        JButton clBtn = new JButton("清理",new ImageIcon(Constan.RESPAHT + "res/img/rub.png"));
+        JButton clBtn = new JButton("清理", new ImageIcon(Constan.RESPAHT + "res/img/rub.png"));
         clBtn.setToolTipText("清理缓存文件夹，删除过期缓存");
         clBtn.setFont(FontUtil.getDefault());
         clBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -178,11 +178,12 @@ public class ListPanel extends JPanel implements Page {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         FileCacheHelper.deleteDirty();
+                        MesBox.success("清理完成");
                     }
                 });
             }
         });
-        JButton aboutBtn = new JButton("关于",new ImageIcon(Constan.RESPAHT + "res/img/help.png"));
+        JButton aboutBtn = new JButton("关于", new ImageIcon(Constan.RESPAHT + "res/img/help.png"));
         aboutBtn.setFont(FontUtil.getDefault());
         aboutBtn.setToolTipText("关于");
         aboutBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -262,7 +263,7 @@ public class ListPanel extends JPanel implements Page {
         tree.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                TreePath path = tree.getPathForLocation(e.getX(), e.getY());
+                TreePath path = tree.getPathForLocation(40, e.getY());
                 if (path == null) {
                     return;
                 }
@@ -277,7 +278,8 @@ public class ListPanel extends JPanel implements Page {
                         return;
                     }
                     if (!"所有分类".equals(dirMenu.getName()) && flag == 0) {//根节点无反应
-                        new TreeMenu(dirMenu.getFilePath()).show(tree, e.getX(), e.getY());
+                        TreeMenu treeMenu = new TreeMenu(dirMenu.getFilePath());
+                        treeMenu.show(tree, e.getX(), e.getY());
                     }
                 }
             }
@@ -296,7 +298,7 @@ public class ListPanel extends JPanel implements Page {
     }
 
     public void showPanel() {
-        VpicFrame.getInstance().getjSplitPane().setDividerLocation(0.18);
+        VpicFrame.getInstance().getjSplitPane().setDividerLocation(0.206);
     }
 
     public JTree getTree() {
@@ -337,7 +339,7 @@ public class ListPanel extends JPanel implements Page {
                     models.insertNodeInto(list.get(n), chosen, n);
                 }
             } catch (IOException e) {
-                log.error("getTreeData异常",e);
+                log.error("getTreeData异常", e);
             }
         }
     }

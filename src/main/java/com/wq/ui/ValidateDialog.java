@@ -2,11 +2,9 @@ package com.wq.ui;
 
 import com.wq.cache.SystemCache;
 import com.wq.constans.Constan;
-import com.wq.service.ListService;
-import com.wq.service.ListServiceImpl;
 import com.wq.util.FontUtil;
 import com.wq.util.MD5Util;
-import com.wq.util.MesBox;
+import com.wq.ui.module.MesBox;
 import com.wq.util.SwingUtils;
 
 import javax.swing.*;

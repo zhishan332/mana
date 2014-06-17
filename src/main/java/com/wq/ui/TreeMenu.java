@@ -4,10 +4,9 @@ import com.wq.constans.Constan;
 import com.wq.model.DirMenu;
 import com.wq.service.ListService;
 import com.wq.service.ListServiceImpl;
-import com.wq.ui.module.FolderChooser;
 import com.wq.util.FileUtil;
 import com.wq.util.FontUtil;
-import com.wq.util.MesBox;
+import com.wq.ui.module.MesBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,10 +29,6 @@ public class TreeMenu extends JPopupMenu implements Page {
     private String filePath;
     private ListService listService = ListServiceImpl.getInstance();
 
-    public TreeMenu() {
-        constructPlate();
-        constructPage();
-    }
     public TreeMenu(String filePath) {
         this.filePath=filePath;
         constructPlate();
@@ -42,13 +37,8 @@ public class TreeMenu extends JPopupMenu implements Page {
 
     @Override
     public void constructPlate() {
-        if (filePath != null) {
-            this.setSize(180, 130);
-            this.setPreferredSize(new Dimension(180, 130));
-        } else {
-            this.setSize(180, 40);
-            this.setPreferredSize(new Dimension(180, 40));
-        }
+        this.setSize(180, 120);
+        this.setPreferredSize(new Dimension(180, 120));
     }
 
     @Override
@@ -96,12 +86,10 @@ public class TreeMenu extends JPopupMenu implements Page {
                 }
             }
         });
-        if (filePath != null) {
-            this.add(fireItem);
-            this.add(delItem);
-            this.add(new JPopupMenu.Separator());
-            this.add(delDiskItem);
-        }
+        this.add(fireItem);
+        this.add(delItem);
+        this.add(new JPopupMenu.Separator());
+        this.add(delDiskItem);
     }
 
     public String getFilePath() {
