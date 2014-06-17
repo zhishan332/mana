@@ -58,7 +58,6 @@ public class AllCache {
 
     public void reloadListCache() throws IOException {
         map.clear();
-        cacheService.getTreeData().clear();
         map = cacheService.getAllPic();
     }
 }

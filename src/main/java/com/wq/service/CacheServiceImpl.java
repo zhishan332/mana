@@ -86,13 +86,13 @@ public class CacheServiceImpl implements CacheService {
         final FileFilter fileFilter = new FileFilter(typeList); //文件的后缀名
         for (String filePath : list) {
             File fileTemp = new File(filePath);
-            makeNodeList();
             if (!fileTemp.exists()) continue;
             Map<String, List<String>> temMap = new RecursiveTravelPerf().scan(filePath, fileFilter);
             if (temMap != null) {
                 map.putAll(temMap);
             }
         }
+        makeNodeList();
         return map;
     }
 

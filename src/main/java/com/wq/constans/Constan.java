@@ -9,7 +9,7 @@ import java.awt.*;
  * @since 1.0.0
  */
 public class Constan {
-    //    public static final String DBPATH = "res/vs.d";
+//    public static final String DBPATH = "res/vs.d";
 //    public static final String RESPAHT = "";
 //    public static final String CACHEPATH = "res/cache/";
 //    public static final String DBPATH = "D:\\Program Files\\mana\\res\\vs.d";
