@@ -28,7 +28,7 @@ public class VpicFrame extends JFrame {
     private JLabel numField;
     private JLabel infoLabel;
     private JSplitPane jSplitPane;
-
+    private JLabel runInfo;
     private VpicFrame() {
         super("Mana看图-1.0.0");
         createGUI();
@@ -112,13 +112,17 @@ public class VpicFrame extends JFrame {
         JToolBar jToolBar = new JToolBar();
         jToolBar.setFloatable(false);
         jToolBar.setBorderPainted(false); //不画边界
-        jToolBar.setMargin(new Insets(1, 20, 1, 10));
+        jToolBar.setPreferredSize(new Dimension(500, 24));
+//        jToolBar.setMargin(new Insets(1, 20, 1, 10));
+        jToolBar.setBorder(BorderFactory.createEmptyBorder());
 //        jToolBar.setBackground(Color.BLACK);
-        infoLabel = new JLabel("无");
+        infoLabel = new JLabel("");
+        infoLabel.setIcon(new ImageIcon(Constan.RESPAHT + "res/img/disk.png"));
         infoLabel.setPreferredSize(new Dimension(500, 20));
         infoLabel.setMaximumSize(new Dimension(500, 20));
         infoLabel.setFont(FontUtil.getDefault());
-        numField = new JLabel("图片总数:0");
+        numField = new JLabel("0 P");
+        numField.setIcon(new ImageIcon(Constan.RESPAHT + "res/img/picture.png"));
         numField.setFont(FontUtil.getSong12());
         numField.setPreferredSize(new Dimension(100, 20));
         numField.setMaximumSize(new Dimension(100, 20));
@@ -138,23 +142,36 @@ public class VpicFrame extends JFrame {
             }
         });
         JLabel git = new LinkLabel("GitHub", "https://github.com/zhishan332/mana");
+        git.setIcon(new ImageIcon(Constan.RESPAHT + "res/img/github.png"));
         git.setFont(FontUtil.getDefault());
         git.setPreferredSize(new Dimension(70, 20));
         git.setMaximumSize(new Dimension(70, 16));
         JLabel weibo = new LinkLabel("微博留言", "http://weibo.com/aziqing");
+        weibo.setIcon(new ImageIcon(Constan.RESPAHT + "res/img/weibo.png"));
         weibo.setFont(FontUtil.getDefault());
-        weibo.setPreferredSize(new Dimension(70, 20));
-        weibo.setMaximumSize(new Dimension(70, 16));
+        weibo.setPreferredSize(new Dimension(80, 20));
+        weibo.setMaximumSize(new Dimension(80, 16));
         JLabel csdn = new LinkLabel("泊川", "http://blog.csdn.net/wantken");
+        csdn.setIcon(new ImageIcon(Constan.RESPAHT + "res/img/csdn.jpg"));
+        csdn.setFont(FontUtil.getDefault());
         csdn.setFont(FontUtil.getDefault());
         csdn.setPreferredSize(new Dimension(70, 20));
         csdn.setMaximumSize(new Dimension(70, 16));
+        runInfo = new JLabel("");
+        runInfo.setIcon(new ImageIcon(Constan.RESPAHT + "res/img/computer.png"));
+        runInfo.setFont(FontUtil.getDefault());
+        runInfo.setPreferredSize(new Dimension(200, 20));
+        runInfo.setMaximumSize(new Dimension(200, 20));
         jToolBar.add(infoLabel);
+        jToolBar.addSeparator();
         jToolBar.add(numField);
         jToolBar.addSeparator();
         jToolBar.add(git);
         jToolBar.add(weibo);
         jToolBar.add(csdn);
+//        jToolBar.add(Box.createHorizontalGlue());
+        jToolBar.addSeparator();
+        jToolBar.add(runInfo);
         jToolBar.addSeparator();
         jToolBar.add(memoryPanel);
         jToolBar.add(rubBtn);
@@ -184,15 +201,19 @@ public class VpicFrame extends JFrame {
     }
 
     public void setInfo(String info) {
-        infoLabel.setText("磁盘路径：" + info);
+        infoLabel.setText(info);
         infoLabel.setToolTipText(info);
     }
 
     public void setNum(int num) {
-        numField.setText("图片总数:" + num);
+        numField.setText(String.valueOf(num)+" P");
     }
 
     public JSplitPane getjSplitPane() {
         return jSplitPane;
+    }
+
+    public JLabel getRunInfo() {
+        return runInfo;
     }
 }

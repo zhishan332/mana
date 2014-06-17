@@ -142,20 +142,13 @@ public class LocalFileCache {
 
     public static void index() {
         Map<String, List<String>> map = CacheServiceImpl.getInstance().getAllPic();
-        ExecutorService pool = Executors.newFixedThreadPool(2);
-        for (final Map.Entry<String, List<String>> entry : map.entrySet()) {
-            final List<String> list = entry.getValue();
+        for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+            List<String> list = entry.getValue();
             for (int i = 0; i < list.size(); i += 10) {
-                final int st = i;
-                pool.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        final long beg = System.currentTimeMillis();
-                        long hashcode = indexImageLabel(entry.getKey(), list, st);
-                        long end = System.currentTimeMillis();
-                        log.info(hashcode + suffix + "构建耗时：" + (end - beg) + "ms");
-                    }
-                });
+                long beg = System.currentTimeMillis();
+                long hashcode = indexImageLabel(entry.getKey(), list, i);
+                long end = System.currentTimeMillis();
+                log.info(hashcode + suffix + "构建耗时：" + (end - beg) + "ms");
             }
         }
     }

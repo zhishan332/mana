@@ -50,11 +50,13 @@ public class FolderChooser extends JFileChooser {
             for (File sFile : files) {
                 ListServiceImpl.getInstance().addTreeData(sFile.getAbsolutePath());
             }
-            ListServiceImpl.getInstance().reloadTreeData();
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    LocalFileCache.asynIndex();
+                    VpicFrame.getInstance().getRunInfo().setText("正在建立索引...");
+                    LocalFileCache.index();
+                    ListServiceImpl.getInstance().reloadTreeData();
+                    VpicFrame.getInstance().getRunInfo().setText("已完成");
                 }
             });
         }

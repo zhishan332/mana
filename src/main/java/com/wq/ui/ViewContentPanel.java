@@ -104,6 +104,10 @@ public class ViewContentPanel extends JPanel implements Page {
                     showMenu(e);
                 }
             }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                AboutDialog.getInstance().setVisible(false);
+            }
         });
     }
 
@@ -157,6 +161,10 @@ public class ViewContentPanel extends JPanel implements Page {
                             PicMenu.getInstance().setFilePath(jLabel.getName());
                             PicMenu.getInstance().setjLabel(jLabel);
                         }
+                    }
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        AboutDialog.getInstance().setVisible(false);
                     }
                 });
                 if (!data.isHMode()) {
