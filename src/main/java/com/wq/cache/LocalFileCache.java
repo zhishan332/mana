@@ -143,6 +143,7 @@ public class LocalFileCache {
     public static void index() {
         Map<String, List<String>> map = CacheServiceImpl.getInstance().getAllPic();
         for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+            log.debug("path:"+entry.getKey());
             List<String> list = entry.getValue();
             for (int i = 0; i < list.size(); i += 10) {
                 long beg = System.currentTimeMillis();
@@ -171,7 +172,9 @@ public class LocalFileCache {
             JLabel imgLabel;
             try {
                 imgLabel = ImageLabelUtil.getImageLabel(path);
-            } catch (ManaException e) {
+                if(imgLabel==null) throw new ManaException("图片未加载成功");
+            } catch (Throwable e) {
+                log.warn("构建索引异常",e);
                 isSuc=false;
                 break;
             }

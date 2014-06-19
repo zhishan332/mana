@@ -45,8 +45,8 @@ public class LinkLabel extends JLabel {
 
     private void setText(boolean b) {
         if (!b)
-            setText("<html><font color=blue><u>" + text);
+            setText("<html><font color='#0196e3'><u>" + text);
         else
-            setText("<html><font color=red><u>" + text);
+            setText("<html><font color='#84C1FF'><u>" + text);
     }
 }

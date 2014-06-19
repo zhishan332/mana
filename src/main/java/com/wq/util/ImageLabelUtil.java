@@ -3,6 +3,7 @@ package com.wq.util;
 import com.wq.cache.AllCache;
 import com.wq.cache.SystemCache;
 import com.wq.exception.ManaException;
+import com.wq.model.SysData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,14 +30,13 @@ public class ImageLabelUtil {
      */
     public static JLabel getImageLabel(final String path) throws ManaException {
         BufferedImage bufferedImage = null;
-        com.wq.model.SysData data = SystemCache.getInstance().getData();
-        boolean isgif = false;
-        Image img = null;
+        SysData data = SystemCache.getInstance().getData();
+        ImageIcon icon = null;
+        JLabel jLabel = new JLabel();
         if (path.endsWith(".gif") || path.endsWith(".GIF")) {
-            isgif = true;
             Toolkit tk = Toolkit.getDefaultToolkit();
-            img = tk.createImage(path);
-            bufferedImage = ImageUtils.toBufferedImage(img);
+            Image img = tk.createImage(path);
+            icon = new ImageIcon(img);
         } else {
             try {
                 bufferedImage = ImageIO.read(new BufferedInputStream(new FileInputStream(path)));
@@ -44,42 +44,31 @@ public class ImageLabelUtil {
                 log.error("读取图片异常", e);
                 throw new ManaException("内存不足，加载图片失败");
             }
+            if (bufferedImage == null) return null;
+            if (data.isHMode()) {
+                int maxHeight = AllCache.getInstance().getMaxPicPanelHeight();
+                int imgHeight = bufferedImage.getHeight();
+                //等比缩放
+                if (data.isAutoFit() && imgHeight > maxHeight) {
+                    double bo = (double) maxHeight / (double) imgHeight;
+                    bo = Math.round(bo * 10000) / 10000.0;
+                    bufferedImage = ImageUtils.reduceImg(bufferedImage, bo);
+                }
+            } else {
+                int maxWidth = AllCache.getInstance().getMaxPicPanelWidth();
+                int imgWidth = bufferedImage.getWidth();
+                //等比缩放
+                if (data.isAutoFit() && imgWidth > maxWidth) {
+                    double bo = (double) maxWidth / (double) imgWidth;
+                    bo = Math.round(bo * 10000) / 10000.0;
+                    bufferedImage = ImageUtils.reduceImg(bufferedImage, bo);
+                }
+            }
+            icon = new ImageIcon(bufferedImage);
         }
-        if (bufferedImage == null) return null;
-        final JLabel jLabel = new JLabel();
-        ImageIcon icon = null;
-        if (data.isHMode()) {
-            int maxHeight = AllCache.getInstance().getMaxPicPanelHeight();
-            int imgHeight = bufferedImage.getHeight();
-            //等比缩放
-            if (data.isAutoFit() && imgHeight > maxHeight) {
-                double bo = (double) maxHeight / (double) imgHeight;
-                bo = Math.round(bo * 10000) / 10000.0;
-                bufferedImage = ImageUtils.reduceImg(bufferedImage, bo);
-                icon = new ImageIcon(bufferedImage);
-            } else {
-                if (!isgif) {
-                    icon = new ImageIcon(bufferedImage);
-                } else {
-                    icon = new ImageIcon(img);
-                }
-            }
-        } else {
-            int maxWidth = AllCache.getInstance().getMaxPicPanelWidth();
-            int imgWidth = bufferedImage.getWidth();
-            //等比缩放
-            if (data.isAutoFit() && imgWidth > maxWidth) {
-                double bo = (double) maxWidth / (double) imgWidth;
-                bo = Math.round(bo * 10000) / 10000.0;
-                bufferedImage = ImageUtils.reduceImg(bufferedImage, bo);
-                icon = new ImageIcon(bufferedImage);
-            } else {
-                if (!isgif) {
-                    icon = new ImageIcon(bufferedImage);
-                } else {
-                    icon = new ImageIcon(img);
-                }
-            }
+        if(icon==null){
+            log.error("ImageIcon为空......");
+            return null;
         }
         jLabel.setIcon(icon);
         jLabel.setName(path);

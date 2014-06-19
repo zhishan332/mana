@@ -6,7 +6,7 @@
 
     <groupId>mana</groupId>
     <artifactId>mana</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -75,6 +75,23 @@
                         </resources>
                     </configuration>
                 </execution>
+                <execution>
+                    <id>copy-bin</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                        <outputDirectory> ${project.build.directory}
+                        </outputDirectory>
+                        <resources>
+                            <resource>
+                                <directory>bin</directory>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
         </executions>
     </plugin>
             <plugin>
@@ -98,6 +115,16 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>substance</groupId>-->
+            <!--<artifactId>substance</artifactId>-->
+            <!--<version>7.2</version>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>com.github.insubstantial</groupId>
+            <artifactId>substance</artifactId>
+            <version>7.2.1</version>
         </dependency>
     </dependencies>
 </project>

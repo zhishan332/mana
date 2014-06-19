@@ -63,6 +63,7 @@ public class ViewContentPanel extends JPanel implements Page {
     @Override
     public void constructPage() {
         log.info("开始加载图片....................");
+        this.removeAll();
         if (list != null && !list.isEmpty() && list.size() > 5) {
             showWait();
         }
@@ -89,12 +90,6 @@ public class ViewContentPanel extends JPanel implements Page {
                 log.info("图片加载完成，耗时：" + (System.currentTimeMillis() - beg) + "ms");
             }
         });
-
-        if (!data.isHMode()) {
-            this.add(Box.createVerticalGlue());
-        } else {
-            this.add(Box.createHorizontalGlue());
-        }
         this.repaint();
         this.addMouseListener(new MouseAdapter() {
             @Override
@@ -104,6 +99,7 @@ public class ViewContentPanel extends JPanel implements Page {
                     showMenu(e);
                 }
             }
+
             @Override
             public void mouseClicked(MouseEvent e) {
                 AboutDialog.getInstance().setVisible(false);
@@ -125,6 +121,7 @@ public class ViewContentPanel extends JPanel implements Page {
             if (cache != null && cache.getModifyDate() == mdate) {
                 log.info("从res/cache下加载图片>>>>>>>>>>>>>>>>>>");
                 labels = (List<JLabel>) cache.getObject();
+                log.info("从cache中获取图片数："+labels.size());
             } else {
                 boolean isSuc = true;
                 for (final String path : list) {
@@ -151,32 +148,33 @@ public class ViewContentPanel extends JPanel implements Page {
                     });
                 }
             }
-            for (final JLabel jLabel : labels) {
-                jLabel.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-                        if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) != 0
-                                && !e.isControlDown() && !e.isShiftDown()) {
-                            PicMenu.getInstance().show(jLabel, e.getX(), e.getY());
-                            PicMenu.getInstance().setFilePath(jLabel.getName());
-                            PicMenu.getInstance().setjLabel(jLabel);
-                        }
-                    }
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        AboutDialog.getInstance().setVisible(false);
-                    }
-                });
+            for (JLabel jLabel : labels) {
+                String imgPath = jLabel.getName();
+                if (imgPath.endsWith(".gif") || imgPath.endsWith(".GIF")) {
+                    log.info("动态图片，重新构造..............");
+                    Toolkit tk = Toolkit.getDefaultToolkit();
+                    Image img = tk.createImage(imgPath);
+                    ImageIcon icon = new ImageIcon(img);
+                    jLabel = new JLabel(icon);
+                }
+                jLabel.addMouseListener(getImgLabelAction(jLabel));
                 if (!data.isHMode()) {
                     jLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                    jLabel.setVerticalAlignment(SwingConstants.CENTER);
                 } else {
                     jLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
+                    jLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                }
+                if (!data.isHMode()) {
+                    this.add(Box.createVerticalStrut(3));
+                } else {
+                    this.add(Box.createHorizontalStrut(3));
                 }
                 this.add(jLabel);
                 if (!data.isHMode()) {
-                    this.add(Box.createVerticalStrut(7));
+                    this.add(Box.createVerticalStrut(3));
                 } else {
-                    this.add(Box.createHorizontalStrut(7));
+                    this.add(Box.createHorizontalStrut(3));
                 }
                 this.validate();
             }
@@ -188,17 +186,36 @@ public class ViewContentPanel extends JPanel implements Page {
                     "<li>选择左侧映射文件夹查看图片(Open the photo by click left folder tree)</li>" +
                     "</html>");
             jLabel.setForeground(Color.white);
-            jLabel.setHorizontalAlignment(JLabel.CENTER);
+            jLabel.setHorizontalAlignment(SwingConstants.CENTER);
             this.add(jLabel);
         }
         this.validate();
+    }
+
+    private MouseAdapter getImgLabelAction(final JLabel jLabel) {
+        return new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) != 0
+                        && !e.isControlDown() && !e.isShiftDown()) {
+                    PicMenu.getInstance().show(jLabel, e.getX(), e.getY());
+                    PicMenu.getInstance().setFilePath(jLabel.getName());
+                    PicMenu.getInstance().setjLabel(jLabel);
+                }
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                AboutDialog.getInstance().setVisible(false);
+            }
+        };
     }
 
     private void showWait() {
         jWaitLabel.setFont(FontUtil.getSong13());
         jWaitLabel.setText("<html><h1>图片略多，正在加载(waiting..)</h1>");
         jWaitLabel.setForeground(Color.white);
-        jWaitLabel.setHorizontalAlignment(JLabel.CENTER);
+        jWaitLabel.setHorizontalAlignment(SwingConstants.CENTER);
         this.add(jWaitLabel);
         this.validate();
     }

@@ -106,9 +106,9 @@ public class SetPanel extends JFrame implements Page {
         win = new JCheckBox("Windows位图(*.bmp)", true);
         win.setBounds(10, 65, 260, 25);
         png = new JCheckBox("Portable Network Graphics(*.png)", true);
-        png.setBounds(280, 40, 260, 25);
+        png.setBounds(280, 40, 240, 25);
         gif = new JCheckBox("CompuServe GIF(*.gif)", true);
-        gif.setBounds(280, 65, 260, 25);
+        gif.setBounds(280, 65, 240, 25);
         JLabel speedJlable = new JLabel("滚动速度：", SwingConstants.RIGHT);
         speedJlable.setFont(FontUtil.getSong12());
         speedJlable.setBounds(10, 90, 60, 35);

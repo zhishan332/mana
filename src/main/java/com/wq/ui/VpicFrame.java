@@ -112,7 +112,7 @@ public class VpicFrame extends JFrame {
         JToolBar jToolBar = new JToolBar();
         jToolBar.setFloatable(false);
         jToolBar.setBorderPainted(false); //不画边界
-        jToolBar.setPreferredSize(new Dimension(500, 24));
+        jToolBar.setPreferredSize(new Dimension(500, 20));
 //        jToolBar.setMargin(new Insets(1, 20, 1, 10));
         jToolBar.setBorder(BorderFactory.createEmptyBorder());
 //        jToolBar.setBackground(Color.BLACK);
@@ -135,6 +135,7 @@ public class VpicFrame extends JFrame {
         rubBtn.setPreferredSize(new Dimension(16, 16));
         rubBtn.setMaximumSize(new Dimension(16, 16));
         rubBtn.setToolTipText("清理内存");
+        rubBtn.setPressedIcon(new ImageIcon(Constan.RESPAHT + "res/img/rub-b.png"));
         rubBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.gc();
@@ -157,7 +158,7 @@ public class VpicFrame extends JFrame {
         csdn.setFont(FontUtil.getDefault());
         csdn.setPreferredSize(new Dimension(70, 20));
         csdn.setMaximumSize(new Dimension(70, 16));
-        runInfo = new JLabel("");
+        runInfo = new JLabel("加载完成");
         runInfo.setIcon(new ImageIcon(Constan.RESPAHT + "res/img/computer.png"));
         runInfo.setFont(FontUtil.getDefault());
         runInfo.setPreferredSize(new Dimension(200, 20));
@@ -206,7 +207,7 @@ public class VpicFrame extends JFrame {
     }
 
     public void setNum(int num) {
-        numField.setText(String.valueOf(num)+" P");
+        numField.setText(String.valueOf(num)+"P");
     }
 
     public JSplitPane getjSplitPane() {

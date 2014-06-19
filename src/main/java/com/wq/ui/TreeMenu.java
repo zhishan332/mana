@@ -68,8 +68,12 @@ public class TreeMenu extends JPopupMenu implements Page {
         delDiskItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (MesBox.confirm("确定删除吗")) {
-                    FileUtil.deleteDir(getFilePath());
-                    listService.reloadTreeData();
+                    log.info("磁盘删除文件夹：" + getFilePath());
+                    boolean flag = FileUtil.deleteDir(getFilePath());
+                    if (!flag) {
+                        MesBox.warn("文件夹下可能含有gif图片或者其他正在被使用的文件，导致删除不完全，请手动删除");
+                    } else
+                        listService.reloadTreeData();
                 }
             }
         });

@@ -80,8 +80,9 @@ public class ListPanel extends JPanel implements Page {
     public void constructPage() {
         JToolBar toolBar = new JToolBar();
         toolBar.setFloatable(false);
-        toolBar.setBorderPainted(false); //不画边界
-        JButton addBtn = new JButton("添加", new ImageIcon(Constan.RESPAHT + "res/img/add.png"));
+        toolBar.setBorder(BorderFactory.createEtchedBorder());
+//        toolBar.setBorderPainted(false); //不画边界
+        JButton addBtn = new JButton("", new ImageIcon(Constan.RESPAHT + "res/img/new.png"));
         addBtn.setToolTipText("添加文件夹");
         addBtn.setFont(FontUtil.getDefault());
         addBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -90,7 +91,7 @@ public class ListPanel extends JPanel implements Page {
             }
         });
 
-        JButton setBtn = new JButton("设置", new ImageIcon(Constan.RESPAHT + "res/img/set.png"));
+        JButton setBtn = new JButton("", new ImageIcon(Constan.RESPAHT + "res/img/set.png"));
         setBtn.setToolTipText("设置");
         setBtn.setFont(FontUtil.getDefault());
         setBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -157,7 +158,7 @@ public class ListPanel extends JPanel implements Page {
 //                FetchImgPanel.getInstance().setVisible(true);
 //            }
 //        });
-        JButton reBtn = new JButton("刷新", new ImageIcon(Constan.RESPAHT + "res/img/refresh.gif"));
+        JButton reBtn = new JButton("", new ImageIcon(Constan.RESPAHT + "res/img/refresh.png"));
         reBtn.setToolTipText("刷新文件夹");
         reBtn.setFont(FontUtil.getDefault());
         reBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -169,7 +170,7 @@ public class ListPanel extends JPanel implements Page {
                 }
             }
         });
-        JButton clBtn = new JButton("清理", new ImageIcon(Constan.RESPAHT + "res/img/rub.png"));
+        JButton clBtn = new JButton("", new ImageIcon(Constan.RESPAHT + "res/img/broom.png"));
         clBtn.setToolTipText("清理缓存文件夹，删除过期缓存");
         clBtn.setFont(FontUtil.getDefault());
         clBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -182,7 +183,7 @@ public class ListPanel extends JPanel implements Page {
                 });
             }
         });
-        JButton aboutBtn = new JButton("关于", new ImageIcon(Constan.RESPAHT + "res/img/help.png"));
+        JButton aboutBtn = new JButton("", new ImageIcon(Constan.RESPAHT + "res/img/help.png"));
         aboutBtn.setFont(FontUtil.getDefault());
         aboutBtn.setToolTipText("关于");
         aboutBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -196,7 +197,7 @@ public class ListPanel extends JPanel implements Page {
                 });
             }
         });
-        JButton hideBtn = new JButton(new ImageIcon(Constan.RESPAHT + "res/img/left.png"));
+        JButton hideBtn = new JButton(new ImageIcon(Constan.RESPAHT + "res/img/login.png"));
         hideBtn.setToolTipText("快速隐藏");
         hideBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -324,7 +325,6 @@ public class ListPanel extends JPanel implements Page {
                 log.error("getTreeData异常", e);
             }
         } else {  //刷新时
-            log.debug("刷新左侧树.................");
             root.removeAllChildren();
             DefaultTreeModel models = new DefaultTreeModel(root);
             tree.setModel(models);    //关联TreeModel

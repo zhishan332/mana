@@ -28,7 +28,7 @@ public class MemoryPanel extends JLabel {    //状态条的颜色
         g.fillRect(left, top, usedAmount, insideHeight);
         g.setColor(getBackground());
         g.fillRect(left + usedAmount, top, insideWidth - usedAmount, insideHeight);
-        g.setFont(FontUtil.getSong12());
+        g.setFont(FontUtil.getArial12());
         g.setColor(Color.black);     //显示状态的文字
         String memory = (Long.toString((totalMemory - freeMemory) / 1048576L) + "M of " + Long.toString(totalMemory / 1048576L) + 'M');     //确定文字的显示位置
         FontMetrics fontmetrics = g.getFontMetrics();

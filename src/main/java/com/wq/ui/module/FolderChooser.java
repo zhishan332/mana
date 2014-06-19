@@ -50,15 +50,30 @@ public class FolderChooser extends JFileChooser {
             for (File sFile : files) {
                 ListServiceImpl.getInstance().addTreeData(sFile.getAbsolutePath());
             }
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    VpicFrame.getInstance().getRunInfo().setText("正在建立索引...");
-                    LocalFileCache.index();
-                    ListServiceImpl.getInstance().reloadTreeData();
-                    VpicFrame.getInstance().getRunInfo().setText("已完成");
-                }
-            });
+            VpicFrame.getInstance().getRunInfo().setText("添加成功，正在建立索引...");
+            new IndexAndReloadWorker().execute();
+        }
+    }
+
+    class IndexAndReloadWorker extends SwingWorker {
+
+        @Override
+        protected Object doInBackground() throws Exception {
+            log.info("添加文件夹映射成功，开始创建索引..");
+            LocalFileCache.index();
+            log.info("添加文件夹映射成功，开始刷新菜单数据..");
+            return null;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                ListServiceImpl.getInstance().reloadTreeData();
+                log.info("添加文件夹映射成功>>>>>>>>>>>>>>>>>>");
+                VpicFrame.getInstance().getRunInfo().setText("索引已完成");
+            } catch (Exception e) {
+                log.error("更新Runinfo失败", e);
+            }
         }
     }
 }

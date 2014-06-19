@@ -1,5 +1,8 @@
 package com.wq.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -16,6 +19,7 @@ import java.util.zip.ZipOutputStream;
  * 文件写入,文件读出   文件编码全部以UTF-8处理
  */
 public class FileUtil {
+    private static final Logger log = LoggerFactory.getLogger(FileUtil.class);
     private static final String CHARSET = "UTF-8";
     public static ExecutorService pool = Executors.newFixedThreadPool(4);
 
@@ -286,15 +290,19 @@ public class FileUtil {
         File f = new File(filepath);// 定义文件路径
         if (f.exists() && f.isDirectory()) {// 判断是文件还是目录
             if (f.listFiles().length == 0) {// 若目录下没有文件则直接删除
-                f.delete();
+                boolean flag = f.delete();
+                log.debug("删除结果：" + flag);
             } else {// 若有则把文件放进数组，并判断是否有下级目录
                 File delFile[] = f.listFiles();
                 int i = f.listFiles().length;
                 for (int j = 0; j < i; j++) {
-                    if (delFile[j].isDirectory()) {
-                        del(delFile[j].getAbsolutePath());// 递归调用del方法并取得子目录路径
+                    if (delFile != null) {
+                        if (delFile[j].isDirectory()) {
+                            del(delFile[j].getAbsolutePath());// 递归调用del方法并取得子目录路径
+                        }
+                        boolean flag = delFile[j].delete();// 删除文件
+                        log.debug("删除结果：" + flag);
                     }
-                    delFile[j].delete();// 删除文件
                 }
             }
         }
@@ -475,6 +483,7 @@ public class FileUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println(FileUtil.getFileType("QQ截图20120814170459.png"));
+//        System.out.println(FileUtil.getFileType("QQ截图20120814170459.png"));
+        FileUtil.deleteDir("C:\\Users\\wangq\\Pictures\\eff");
     }
 }
