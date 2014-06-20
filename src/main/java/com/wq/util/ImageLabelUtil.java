@@ -32,7 +32,12 @@ public class ImageLabelUtil {
         BufferedImage bufferedImage = null;
         SysData data = SystemCache.getInstance().getData();
         ImageIcon icon = null;
-        JLabel jLabel = new JLabel();
+        JLabel jLabel = null;
+        try {
+            jLabel = new JLabel();
+        } catch (Throwable e) {
+            log.warn("创建JLabel失败",e.getMessage());
+        }
         if (path.endsWith(".gif") || path.endsWith(".GIF")) {
             Toolkit tk = Toolkit.getDefaultToolkit();
             Image img = tk.createImage(path);
@@ -65,10 +70,6 @@ public class ImageLabelUtil {
                 }
             }
             icon = new ImageIcon(bufferedImage);
-        }
-        if(icon==null){
-            log.error("ImageIcon为空......");
-            return null;
         }
         jLabel.setIcon(icon);
         jLabel.setName(path);
