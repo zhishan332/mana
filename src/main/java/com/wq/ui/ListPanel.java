@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,7 @@ import java.util.Set;
 
 /**
  * To change this template use File | Settings | File Templates.
+ *
  * @author wangqing
  * @since 1.0.0
  */
@@ -51,6 +53,7 @@ public class ListPanel extends JPanel implements Page {
     private CacheService cacheService = CacheServiceImpl.getInstance();
     private int flag = 0;//标志位，防止树被选中后自动加载图片
     private TreePath lastTreePath;
+    private String lastFilePath;
 
     private ListPanel() {
         constructPlate();
@@ -178,9 +181,22 @@ public class ListPanel extends JPanel implements Page {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         LocalFileCache.deleteDirty();
-                        MesBox.success("清理完成");
+                        MesBox.success("清理完成", VpicFrame.getInstance());
                     }
                 });
+            }
+        });
+        JButton fireBtn = new JButton("", new ImageIcon(Constan.RESPAHT + "res/img/fire.png"));
+        fireBtn.setToolTipText("文件夹中显示");
+        fireBtn.setFont(FontUtil.getDefault());
+        fireBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (lastFilePath == null) return;
+                try {
+                    Desktop.getDesktop().open(new File(lastFilePath));
+                } catch (IOException exp) {
+                    log.error("进入文件目录失败", exp);
+                }
             }
         });
         JButton aboutBtn = new JButton("", new ImageIcon(Constan.RESPAHT + "res/img/help.png"));
@@ -215,6 +231,7 @@ public class ListPanel extends JPanel implements Page {
         toolBar.add(clBtn);
         toolBar.add(aboutBtn);
         toolBar.add(Box.createHorizontalGlue());
+        toolBar.add(fireBtn);
         toolBar.add(hideBtn);
         this.add("North", toolBar);
         root = new DefaultMutableTreeNode("全部");
@@ -254,6 +271,7 @@ public class ListPanel extends JPanel implements Page {
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
+                            lastFilePath=dirMenu.getFilePath();
                             listService.loadPic(dirMenu.getFilePath(), list, 0);
                         }
                     });
@@ -278,7 +296,8 @@ public class ListPanel extends JPanel implements Page {
                         return;
                     }
                     if (!"所有分类".equals(dirMenu.getName()) && flag == 0) {//根节点无反应
-                        TreeMenu treeMenu = new TreeMenu(dirMenu.getFilePath());
+                        lastFilePath = dirMenu.getFilePath();
+                        TreeMenu treeMenu = new TreeMenu(lastFilePath);
                         treeMenu.show(tree, e.getX(), e.getY());
                     }
                 }

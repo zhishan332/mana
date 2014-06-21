@@ -58,9 +58,13 @@ public class FolderChooser extends JFileChooser {
     class IndexAndReloadWorker extends SwingWorker {
 
         @Override
-        protected Object doInBackground() throws Exception {
+        protected Object doInBackground(){
             log.info("添加文件夹映射成功，开始创建索引..");
-            LocalFileCache.index();
+            try {
+                LocalFileCache.index();
+            } catch (Throwable e) {
+               log.warn("一点异常");
+            }
             log.info("添加文件夹映射成功，开始刷新菜单数据..");
             return null;
         }

@@ -6,8 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MemoryPanel extends JLabel {    //状态条的颜色
-    private Color edgeColor = new Color(82, 115, 214);
-    private Color centerColor = new Color(180, 200, 230);
+    private Color edgeColor = new Color(93, 103, 214);
+    private Color centerColor = new Color(63, 114, 230);
 
     public void paint(Graphics g) {
         super.paint(g);     //得到当前组件（JPanel）的大小

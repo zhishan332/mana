@@ -11,9 +11,7 @@ import com.wq.util.FontUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.util.Map;
 
 /**
@@ -111,7 +109,7 @@ public class VpicFrame extends JFrame {
     public void constructPage() {
         JToolBar jToolBar = new JToolBar();
         jToolBar.setFloatable(false);
-        jToolBar.setBorderPainted(false); //不画边界
+//        jToolBar.setBorderPainted(false); //不画边界
         jToolBar.setPreferredSize(new Dimension(500, 20));
 //        jToolBar.setMargin(new Insets(1, 20, 1, 10));
         jToolBar.setBorder(BorderFactory.createEmptyBorder());
@@ -129,35 +127,41 @@ public class VpicFrame extends JFrame {
         numField.setFont(FontUtil.getDefault());
         loadBotoom();
         final MemoryPanel memoryPanel = new MemoryPanel();
-        memoryPanel.setPreferredSize(new Dimension(100, 16));
-        memoryPanel.setMaximumSize(new Dimension(100, 16));
-        JButton rubBtn = ButtonUtil.createJButton(Constan.RESPAHT + "res/img/rub.png", null, null);
-        rubBtn.setPreferredSize(new Dimension(16, 16));
-        rubBtn.setMaximumSize(new Dimension(16, 16));
-        rubBtn.setToolTipText("清理内存");
-        rubBtn.setPressedIcon(new ImageIcon(Constan.RESPAHT + "res/img/rub-b.png"));
-        rubBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        memoryPanel.setPreferredSize(new Dimension(100, 20));
+        memoryPanel.setMaximumSize(new Dimension(100, 20));
+        memoryPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        memoryPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
                 System.gc();
                 memoryPanel.repaint();
             }
         });
+//        JButton rubBtn = ButtonUtil.createJButton(Constan.RESPAHT + "res/img/rub3.png", null, null);
+//        rubBtn.setToolTipText("清理内存");
+//        rubBtn.setPressedIcon(new ImageIcon(Constan.RESPAHT + "res/img/rub-b.png"));
+//        rubBtn.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                System.gc();
+//                memoryPanel.repaint();
+//            }
+//        });
         JLabel git = new LinkLabel("GitHub", "https://github.com/zhishan332/mana");
         git.setIcon(new ImageIcon(Constan.RESPAHT + "res/img/github.png"));
         git.setFont(FontUtil.getDefault());
         git.setPreferredSize(new Dimension(70, 20));
-        git.setMaximumSize(new Dimension(70, 16));
+        git.setMaximumSize(new Dimension(70, 20));
         JLabel weibo = new LinkLabel("微博留言", "http://weibo.com/aziqing");
         weibo.setIcon(new ImageIcon(Constan.RESPAHT + "res/img/weibo.png"));
         weibo.setFont(FontUtil.getDefault());
         weibo.setPreferredSize(new Dimension(80, 20));
-        weibo.setMaximumSize(new Dimension(80, 16));
+        weibo.setMaximumSize(new Dimension(80, 20));
         JLabel csdn = new LinkLabel("泊川", "http://blog.csdn.net/wantken");
         csdn.setIcon(new ImageIcon(Constan.RESPAHT + "res/img/csdn.jpg"));
         csdn.setFont(FontUtil.getDefault());
         csdn.setFont(FontUtil.getDefault());
         csdn.setPreferredSize(new Dimension(70, 20));
-        csdn.setMaximumSize(new Dimension(70, 16));
+        csdn.setMaximumSize(new Dimension(70, 20));
         runInfo = new JLabel("加载完成");
         runInfo.setIcon(new ImageIcon(Constan.RESPAHT + "res/img/computer.png"));
         runInfo.setFont(FontUtil.getDefault());
@@ -173,10 +177,10 @@ public class VpicFrame extends JFrame {
 //        jToolBar.add(Box.createHorizontalGlue());
         jToolBar.addSeparator();
         jToolBar.add(runInfo);
-        jToolBar.addSeparator();
+        jToolBar.add(Box.createHorizontalGlue());
         jToolBar.add(memoryPanel);
-        jToolBar.add(rubBtn);
-        jToolBar.addSeparator();
+//        jToolBar.add(rubBtn);
+//        jToolBar.addSeparator();
         jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true);
         jSplitPane.setBorder(null);
         jSplitPane.setDividerSize(8);

@@ -35,9 +35,9 @@ public class VipcTreeCellRenderer extends DefaultTreeCellRenderer {
         if (paths.length == 2) {//映射文件夹
             this.setIcon(new ImageIcon(tk.createImage(Constan.RESPAHT+ "res/img/photography.png")));
         } else if (leaf) {
-            this.setIcon(new ImageIcon(tk.createImage(Constan.RESPAHT+ "res/img/folder2.png")));
+            this.setIcon(new ImageIcon(tk.createImage(Constan.RESPAHT+ "res/img/folder.png")));
         } else {
-            this.setIcon(new ImageIcon(tk.createImage(Constan.RESPAHT+ "res/img/folder2.png")));
+            this.setIcon(new ImageIcon(tk.createImage(Constan.RESPAHT+ "res/img/folder.png")));
         }
     }
 
