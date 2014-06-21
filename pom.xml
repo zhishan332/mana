@@ -116,11 +116,21 @@
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>substance</groupId>-->
-            <!--<artifactId>substance</artifactId>-->
-            <!--<version>7.2</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>laf</groupId>
+            <artifactId>laf-plugin</artifactId>
+            <version>7.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>laf</groupId>
+            <artifactId>laf-widget</artifactId>
+            <version>7.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>laf</groupId>
+            <artifactId>trident</artifactId>
+            <version>7.2.1</version>
+        </dependency>
         <dependency>
             <groupId>com.github.insubstantial</groupId>
             <artifactId>substance</artifactId>

@@ -213,7 +213,7 @@ public class ListPanel extends JPanel implements Page {
                 });
             }
         });
-        JButton hideBtn = new JButton(new ImageIcon(Constan.RESPAHT + "res/img/login.png"));
+        JButton hideBtn = new JButton(new ImageIcon(Constan.RESPAHT + "res/img/hide.png"));
         hideBtn.setToolTipText("快速隐藏");
         hideBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {

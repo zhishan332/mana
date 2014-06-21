@@ -1,7 +1,7 @@
 package com.wq.cache;
 
 /**
- * To change this template use File | Settings | File Templates.
+ * 图片缓存管理器
  *
  * @author wangqing
  * @since 1.0.0

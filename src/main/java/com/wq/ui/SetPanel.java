@@ -7,6 +7,8 @@ import com.wq.service.ListServiceImpl;
 import com.wq.util.FontUtil;
 import com.wq.util.MD5Util;
 import com.wq.util.SwingUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -25,6 +27,7 @@ import java.util.HashSet;
  * @since 1.0.0
  */
 public class SetPanel extends JFrame implements Page {
+    private static final Logger log = LoggerFactory.getLogger(SetPanel.class);
     private static SetPanel setPanel;
     private JPanel generalPanel;
     private Container container;
@@ -115,7 +118,7 @@ public class SetPanel extends JFrame implements Page {
         speed = new JTextField();
         speed.setBounds(66, 93, 90, 28);
         speed.setDocument(new NumOnlyDocument());
-        JLabel tip = new JLabel("(数值越大越快,默认35,软件重启后生效)");
+        JLabel tip = new JLabel("(数值越大越快,默认35)");
         tip.setFont(FontUtil.getSong12());
         tip.setBounds(163, 95, 300, 25);
         JLabel pathJlable = new JLabel("保存路径：", SwingConstants.RIGHT);
@@ -144,7 +147,7 @@ public class SetPanel extends JFrame implements Page {
                         String selPath = jChooser.getSelectedFile().getCanonicalPath();
                         savePath.setText(selPath);
                     } catch (IOException e1) {
-                        e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        log.error("选择默认保存路径失败", e1);
                     }
                 }
             }
@@ -158,7 +161,7 @@ public class SetPanel extends JFrame implements Page {
         autoFit = new JCheckBox("图片自适应");
         autoFit.setFont(FontUtil.getSong12());
         autoFit.setBounds(10, 215, 150, 25);
-        isHModeBox = new JCheckBox("水平浏览模式(软件重启后生效)");
+        isHModeBox = new JCheckBox("水平浏览模式");
         isHModeBox.setFont(FontUtil.getSong12());
         isHModeBox.setBounds(160, 215, 260, 25);
         passJlable = new JLabel("设置密码：", SwingConstants.RIGHT);
@@ -315,7 +318,7 @@ public class SetPanel extends JFrame implements Page {
         }
 
         String pass = new String(jf.getPassword());
-        if (pass != null && !"".equals(pass.trim())) {
+        if (!"".equals(pass.trim())) {
             pass = MD5Util.getEncryptedPwd(pass); //MD5加密
         }
         if (userProxyBox.isSelected()) {

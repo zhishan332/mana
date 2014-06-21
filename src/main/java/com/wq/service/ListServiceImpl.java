@@ -7,7 +7,6 @@ import com.wq.ui.ViewContentPanel;
 import com.wq.ui.ViewScrollPanel;
 import com.wq.ui.VpicFrame;
 import com.wq.util.JTreeUtil;
-import com.wq.util.LightLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,23 +16,22 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wangq
- * Date: 12-8-2
- * Time: 下午3:45
- * To change this template use File | Settings | File Templates.
+ * 左侧列表服务
+ *
+ * @author wangqing
+ * @since 1.0.0
  */
 public class ListServiceImpl implements ListService {
     private static final Logger log = LoggerFactory.getLogger(ListServiceImpl.class);
     private static ListServiceImpl ourInstance = new ListServiceImpl();
     private SystemCache handler = SystemCache.getInstance();
 
-    public static ListServiceImpl getInstance() {
-        return ourInstance;
-    }
-
     private ListServiceImpl() {
 
+    }
+
+    public static ListServiceImpl getInstance() {
+        return ourInstance;
     }
 
     @Override
@@ -53,13 +51,13 @@ public class ListServiceImpl implements ListService {
         try {
             AllCache.getInstance().reloadListCache();
         } catch (IOException e) {
-            log.error("reloadListCache失败",e);
+            log.error("reloadListCache失败", e);
         }
         ListPanel.getInstance().loadTreeModel();
         ListPanel.getInstance().getTree().updateUI();
         JTreeUtil.expandTree(ListPanel.getInstance().getTree(), SystemCache.getInstance().getData().isExpland());  //展开所有子节点
         ViewScrollPanel.getInstance().getVerticalScrollBar().setValue(1);//滚动条设置为0
-        loadPic(null,null,0);
+        loadPic(null, null, 0);
         Map<String, java.util.List<String>> map2 = AllCache.getInstance().getMenu();
         if (map2 != null) {
             for (Map.Entry<String, java.util.List<String>> entry : map2.entrySet()) {
@@ -67,10 +65,6 @@ public class ListServiceImpl implements ListService {
                 break;
             }
         }
-//        loadPic(null);
-//        ViewContentPanel.getInstance().clear();
-//        ViewContentPanel.getInstance().constructPage();
-//        ViewContentPanel.getInstance().updateUI();
         TreePath path = ListPanel.getInstance().getLastTreePath();
         if (path != null) {
             ListPanel.getInstance().getTree().setSelectionPath(path);
@@ -83,13 +77,11 @@ public class ListServiceImpl implements ListService {
     /**
      * 根据图片列表加载图片
      */
-    public void loadPic(String folder,final List<String> list,int start) {
-//        ViewContentPanel.getInstance().clear();
-//        ViewContentPanel.getInstance().loadPic(list);
-        final ViewContentPanel viewContentPanel = new ViewContentPanel(folder,list,start);
-//        HtmlPanel viewContentPanel=new HtmlPanel(HtmlUtil.getHtmlStrByList(list));
+    public void loadPic(String folder, final List<String> list, int start) {
+        ViewContentPanel viewContentPanel = new ViewContentPanel(folder, list, start);
         viewContentPanel.repaint();
         ViewScrollPanel.getInstance().clear();
+        ViewScrollPanel.getInstance().constructPlate();
         ViewScrollPanel.getInstance().setViewContentPanel(viewContentPanel);
         ViewScrollPanel.getInstance().setViewportView(viewContentPanel);
 //        ViewScrollPanel.getInstance().getHorizontalScrollBar().updateUI();
@@ -99,23 +91,8 @@ public class ListServiceImpl implements ListService {
         ViewScrollPanel.getInstance().getVerticalScrollBar().setValue(0);//滚动条设置为0
 //        ViewScrollPanel.getInstance().updateUI();
         VpicFrame.getInstance().repaint();//测试释放内存
-//        System.gc();
     }
 
-    //    public void loadPic(final List<String> list) {
-//        SwingUtilities.invokeLater(new Runnable() {
-//            public void run() {
-//                ViewContentPanel.getInstance().removeAll();
-//                ViewContentPanel.getInstance().loadPic(list);
-//                ViewContentPanel.getInstance().revalidate();
-//                ViewContentPanel.getInstance().repaint();
-//                ViewContentPanel.getInstance().updateUI();
-//                ViewScrollPanel.getInstance().getVerticalScrollBar().setValue(0);//滚动条设置为0
-//                ViewScrollPanel.getInstance().updateUI();
-//                VpicFrame.getInstance().repaint();//测试释放内存
-//            }
-//        });
-//    }
     @Override
     public void saveAll() {
         //To change body of implemented methods use File | Settings | File Templates.
