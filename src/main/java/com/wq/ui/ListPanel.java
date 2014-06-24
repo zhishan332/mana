@@ -281,10 +281,13 @@ public class ListPanel extends JPanel implements Page {
         tree.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                TreePath path = tree.getPathForLocation(40, e.getY());
+                log.info("进入树结构鼠标事件");
+                TreePath path = tree.getPathForLocation(20, e.getY());
                 if (path == null) {
+                    log.debug("path ==null 返回");
                     return;
                 }
+                log.debug("setSelectionPath:"+path);
                 tree.setSelectionPath(path);
                 if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) != 0
                         && !e.isControlDown() && !e.isShiftDown()) {
@@ -293,13 +296,18 @@ public class ListPanel extends JPanel implements Page {
                     if (node != null && node.getUserObject() instanceof DirMenu) {
                         dirMenu = (DirMenu) node.getUserObject();//获得这个结点的名称
                     } else {
+                        log.info("节点为空或者数据类型不符合不弹出右键菜单");
                         return;
                     }
                     if (!"所有分类".equals(dirMenu.getName()) && flag == 0) {//根节点无反应
                         lastFilePath = dirMenu.getFilePath();
                         TreeMenu treeMenu = new TreeMenu(lastFilePath);
                         treeMenu.show(tree, e.getX(), e.getY());
+                    }else{
+                        log.info("点击根节点不弹出右键菜单");
                     }
+                } else{
+                    log.debug("非右键事件");
                 }
             }
         });

@@ -145,7 +145,7 @@ public class LocalFileCache {
         for (Map.Entry<String, List<String>> entry : map.entrySet()) {
             log.debug("path:"+entry.getKey());
             List<String> list = entry.getValue();
-            for (int i = 0; i < list.size(); i += 10) {
+            for (int i = 0; i < list.size(); i += Constan.PAGE_SHOW_NUM) {
                 long beg = System.currentTimeMillis();
                 long hashcode = indexImageLabel(entry.getKey(), list, i);
                 long end = System.currentTimeMillis();

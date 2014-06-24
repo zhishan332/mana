@@ -55,18 +55,18 @@ public class ImageLabelUtil {
                 int imgHeight = bufferedImage.getHeight();
                 //等比缩放
                 if (data.isAutoFit() && imgHeight > maxHeight) {
-                    double bo = (double) maxHeight / (double) imgHeight;
-                    bo = Math.round(bo * 10000) / 10000.0;
-                    bufferedImage = ImageUtils.reduceImg(bufferedImage, bo);
+                    double bo = (double) imgHeight / (double) maxHeight;
+//                    bo = Math.round(bo * 10000) / 10000.0;
+                    bufferedImage = ImageUtils.reduce(bufferedImage, bo);
                 }
             } else {
                 int maxWidth = AllCache.getInstance().getMaxPicPanelWidth();
                 int imgWidth = bufferedImage.getWidth();
                 //等比缩放
                 if (data.isAutoFit() && imgWidth > maxWidth) {
-                    double bo = (double) maxWidth / (double) imgWidth;
-                    bo = Math.round(bo * 10000) / 10000.0;
-                    bufferedImage = ImageUtils.reduceImg(bufferedImage, bo);
+                    double bo = (double) imgWidth / (double) maxWidth;
+//                    bo = Math.round(bo * 10000) / 10000.0;
+                    bufferedImage = ImageUtils.reduce(bufferedImage, bo);
                 }
             }
             icon = new ImageIcon(bufferedImage);
