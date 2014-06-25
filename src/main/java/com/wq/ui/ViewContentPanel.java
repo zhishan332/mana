@@ -76,7 +76,7 @@ public class ViewContentPanel extends JPanel implements Page {
                 }
                 long beg = System.currentTimeMillis();
                 List<String> loadList = new ArrayList<String>();
-                for (int i = start; i < list.size() && i < start + 10; i++) {
+                for (int i = start; i < list.size() && i < start +  Constan.PAGE_SHOW_NUM; i++) {
                     loadList.add(list.get(i));
                 }
                 if (start > 0) {
@@ -84,7 +84,7 @@ public class ViewContentPanel extends JPanel implements Page {
                 }
                 loadPic(loadList);
                 hideWait();
-                if (list.size() > (start + 10)) {
+                if (list.size() > (start +  Constan.PAGE_SHOW_NUM)) {
                     addNextButton(list, start);
                 }
                 log.info("图片加载完成，耗时：" + (System.currentTimeMillis() - beg) + "ms");

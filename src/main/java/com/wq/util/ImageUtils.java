@@ -176,7 +176,35 @@ public class ImageUtils {
 
         return tag;
     }
+    public static BufferedImage reduce(BufferedImage originalPic,double factor) {
+        BufferedImage source;
+        try {
+            source =originalPic;
 
+            int sourceW = source.getWidth();
+            int sourceH = source.getHeight();
+
+            int w = (int) (sourceW / factor + 0.5);
+            int h = (int) (sourceH / factor + 0.5);
+
+            boolean hasAlpha = source.getColorModel().hasAlpha();
+            int format = hasAlpha ? BufferedImage.TYPE_INT_ARGB
+                    : BufferedImage.TYPE_INT_RGB;
+            System.out.println("w:"+w+"h:"+h);
+            BufferedImage output = new BufferedImage(w, h, format);
+            Graphics2D g = output.createGraphics();
+
+            // Ask Java to use its best but slowest scaling
+            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                    RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+            g.drawImage(source, 0, 0, w, h, null);
+            g.dispose();
+            return output;
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+        return null;
+    }
     /**
      * 缩放图像（按高度和宽度缩放）
      *
