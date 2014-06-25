@@ -2,10 +2,8 @@ package com.wq.service;
 
 import com.wq.cache.AllCache;
 import com.wq.cache.SystemCache;
-import com.wq.ui.ListPanel;
-import com.wq.ui.ViewContentPanel;
-import com.wq.ui.ViewScrollPanel;
-import com.wq.ui.VpicFrame;
+import com.wq.context.SystemContext;
+import com.wq.ui.*;
 import com.wq.util.JTreeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,6 +87,9 @@ public class ListServiceImpl implements ListService {
         ViewScrollPanel.getInstance().repaint();
         ViewScrollPanel.getInstance().doLayout();
         ViewScrollPanel.getInstance().getVerticalScrollBar().setValue(0);//滚动条设置为0
+        SystemContext.getInstance().put("PageStart",start);
+        GoPageDialog.getInstance().setVisible(false);
+        VpicFrame.getInstance().refreshNum();
 //        ViewScrollPanel.getInstance().updateUI();
         VpicFrame.getInstance().repaint();//测试释放内存
     }

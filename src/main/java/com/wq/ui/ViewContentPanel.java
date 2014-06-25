@@ -103,6 +103,7 @@ public class ViewContentPanel extends JPanel implements Page {
             @Override
             public void mouseClicked(MouseEvent e) {
                 AboutDialog.getInstance().setVisible(false);
+                GoPageDialog.getInstance().setVisible(false);
             }
         });
     }
@@ -207,6 +208,7 @@ public class ViewContentPanel extends JPanel implements Page {
             @Override
             public void mouseClicked(MouseEvent e) {
                 AboutDialog.getInstance().setVisible(false);
+                GoPageDialog.getInstance().setVisible(false);
             }
         };
     }
@@ -235,7 +237,7 @@ public class ViewContentPanel extends JPanel implements Page {
         JButton preButton = ButtonUtil.createJButton(imgPath, null, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                listService.loadPic(folder, list, start - 10);
+                listService.loadPic(folder, list, start - Constan.PAGE_SHOW_NUM);
             }
         });
         preButton.setPressedIcon(new ImageIcon(pressImgPath));
@@ -254,7 +256,7 @@ public class ViewContentPanel extends JPanel implements Page {
         JButton nextButton = ButtonUtil.createJButton(imgPath, null, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                listService.loadPic(folder, list, start + 10);
+                listService.loadPic(folder, list, start + Constan.PAGE_SHOW_NUM);
             }
         });
         nextButton.setPressedIcon(new ImageIcon(pressImgPath));
@@ -269,5 +271,13 @@ public class ViewContentPanel extends JPanel implements Page {
 
     public void setList(List<String> list) {
         this.list = list;
+    }
+
+    public List<String> getList() {
+        return list;
+    }
+
+    public String getFolder() {
+        return folder;
     }
 }

@@ -10,9 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.zip.GZIPInputStream;
@@ -31,6 +29,7 @@ public class LocalFileCache {
     private static int BUFFER = 1024 * 10;
 
     public static void save(FileCacheModel fileCacheModel, long hashcode) {
+        check();
         ObjectOutputStream out = null;
         try {
             String newName = String.valueOf(hashcode);
@@ -51,6 +50,33 @@ public class LocalFileCache {
             dest.close();
         } catch (IOException e) {
             log.error("缓存图片异常", e);
+        }
+    }
+
+    public static void check() {
+        File ff = new File(cachePath);
+        if (!ff.exists()) {
+            boolean flag = ff.mkdir();
+            if (!flag) log.warn("创建文件夹失败");
+        }
+        File[] flist = ff.listFiles();
+        if (flist == null || flist.length <= 50) return;
+        Arrays.sort(flist, new CompratorByLastModified());
+        for (int i = 0; i <(flist.length-50); i++) {
+            boolean flag = flist[i].delete();
+            if (!flag) log.warn("清理缓存失败");
+        }
+    }
+
+    static class CompratorByLastModified implements Comparator<File> {
+        public int compare(File f1, File f2) {
+            long diff = f1.lastModified() - f2.lastModified();
+            if (diff > 0)
+                return 1;
+            else if (diff == 0)
+                return 0;
+            else
+                return -1;
         }
     }
 
@@ -143,7 +169,7 @@ public class LocalFileCache {
     public static void index() {
         Map<String, List<String>> map = CacheServiceImpl.getInstance().getAllPic();
         for (Map.Entry<String, List<String>> entry : map.entrySet()) {
-            log.debug("path:"+entry.getKey());
+            log.debug("path:" + entry.getKey());
             List<String> list = entry.getValue();
             for (int i = 0; i < list.size(); i += Constan.PAGE_SHOW_NUM) {
                 long beg = System.currentTimeMillis();
@@ -167,15 +193,15 @@ public class LocalFileCache {
         File ff = new File(cachePath + newName + suffix);
         if (ff.exists()) return hashCode;
         List<JLabel> labels = new ArrayList<JLabel>();
-        boolean isSuc=true;
+        boolean isSuc = true;
         for (String path : tempList) {
             JLabel imgLabel;
             try {
                 imgLabel = ImageLabelUtil.getImageLabel(path);
-                if(imgLabel==null) throw new ManaException("图片未加载成功");
+                if (imgLabel == null) throw new ManaException("图片未加载成功");
             } catch (Throwable e) {
-                log.warn("构建索引异常",e);
-                isSuc=false;
+                log.warn("构建索引异常", e);
+                isSuc = false;
                 break;
             }
             labels.add(imgLabel);
@@ -213,25 +239,37 @@ public class LocalFileCache {
     }
 
     public static void main(String[] args) throws Exception {
-        File ff = new File("F:\\Image\\tem");
-        File[] list = ff.listFiles();
-        List<JLabel> clist = new ArrayList<JLabel>();
-        int i = 0;
-        for (File f1 : list) {
-            if (i >= 10) break;
-            JLabel imgLabel = ImageLabelUtil.getImageLabel(f1.getAbsolutePath());
-            clist.add(imgLabel);
-            i++;
+//        File ff = new File("F:\\Image\\tem");
+//        File[] list = ff.listFiles();
+//        List<JLabel> clist = new ArrayList<JLabel>();
+//        int i = 0;
+//        for (File f1 : list) {
+//            if (i >= 10) break;
+//            JLabel imgLabel = ImageLabelUtil.getImageLabel(f1.getAbsolutePath());
+//            clist.add(imgLabel);
+//            i++;
+//        }
+//        FileCacheModel mod = new FileCacheModel();
+//        mod.setModifyDate(1231231231);
+//        mod.setObject(clist);
+//        long beg = System.currentTimeMillis();
+//        LocalFileCache.save(mod, 1111111111);
+//        long end = System.currentTimeMillis();
+//        System.out.println(end - beg);
+//        LocalFileCache.get(1111111111);
+//        long end2 = System.currentTimeMillis();
+//        System.out.println(end2 - end);
+
+        File ff = new File(cachePath);
+        if (!ff.exists()) {
+            boolean flag = ff.mkdir();
+            if (!flag) log.warn("创建文件夹失败");
         }
-        FileCacheModel mod = new FileCacheModel();
-        mod.setModifyDate(1231231231);
-        mod.setObject(clist);
-        long beg = System.currentTimeMillis();
-        LocalFileCache.save(mod, 1111111111);
-        long end = System.currentTimeMillis();
-        System.out.println(end - beg);
-        LocalFileCache.get(1111111111);
-        long end2 = System.currentTimeMillis();
-        System.out.println(end2 - end);
+        File[] flist = ff.listFiles();
+        if (flist == null || flist.length <= 1) return;
+        Arrays.sort(flist, new CompratorByLastModified());
+        for (int i = 0; i < 10; i++) {
+            log.info("修改时间：" + flist[i].lastModified());
+        }
     }
 }

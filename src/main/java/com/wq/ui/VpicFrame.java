@@ -1,17 +1,23 @@
 package com.wq.ui;
 
+import com.sun.awt.AWTUtilities;
 import com.wq.cache.AllCache;
 import com.wq.constans.Constan;
+import com.wq.context.SystemContext;
 import com.wq.service.CacheService;
 import com.wq.service.CacheServiceImpl;
 import com.wq.ui.module.LinkLabel;
-import com.wq.util.ButtonUtil;
 import com.wq.util.FileUtil;
 import com.wq.util.FontUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Map;
 
 /**
@@ -21,12 +27,14 @@ import java.util.Map;
  * @since 1.0.0
  */
 public class VpicFrame extends JFrame {
+    private static final Logger log = LoggerFactory.getLogger(VpicFrame.class);
     private static VpicFrame vpic;
     private CacheService cacheService = CacheServiceImpl.getInstance();
     private JLabel numField;
     private JLabel infoLabel;
     private JSplitPane jSplitPane;
     private JLabel runInfo;
+
     private VpicFrame() {
         super("Mana看图-1.0.0");
         createGUI();
@@ -122,9 +130,20 @@ public class VpicFrame extends JFrame {
         numField = new JLabel("0 P");
         numField.setIcon(new ImageIcon(Constan.RESPAHT + "res/img/picture.png"));
         numField.setFont(FontUtil.getSong12());
-        numField.setPreferredSize(new Dimension(100, 20));
-        numField.setMaximumSize(new Dimension(100, 20));
+        numField.setPreferredSize(new Dimension(180, 20));
+        numField.setMaximumSize(new Dimension(180, 20));
         numField.setFont(FontUtil.getDefault());
+        numField.setToolTipText("跳转");
+        numField.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(final MouseEvent e) {
+                GoPageDialog goPageDialog = GoPageDialog.getInstance();
+                goPageDialog.make();
+                goPageDialog.setLocation(e.getXOnScreen(), (e.getYOnScreen() - goPageDialog.getHeight() - 12));
+                goPageDialog.setVisible(true);
+                AWTUtilities.setWindowOpacity(goPageDialog, 0.85f);
+            }
+        });
         loadBotoom();
         final MemoryPanel memoryPanel = new MemoryPanel();
         memoryPanel.setPreferredSize(new Dimension(100, 20));
@@ -199,7 +218,8 @@ public class VpicFrame extends JFrame {
         if (map != null) {
             for (Map.Entry<String, java.util.List<String>> entry : map.entrySet()) {
                 setInfo(entry.getKey());
-                setNum(entry.getValue().size());
+                SystemContext.getInstance().put("ImageTotal", entry.getValue().size());
+                refreshNum();
                 break;
             }
         }
@@ -210,8 +230,11 @@ public class VpicFrame extends JFrame {
         infoLabel.setToolTipText(info);
     }
 
-    public void setNum(int num) {
-        numField.setText(String.valueOf(num)+"P");
+    public void refreshNum() {
+        int total = SystemContext.getInstance().getIntVal("ImageTotal");
+        int start = SystemContext.getInstance().getIntVal("PageStart");
+        start = (int) Math.ceil((double)start / Constan.PAGE_SHOW_NUM);
+        numField.setText("共" + total + "P" + "   当前第 " + (start + 1) + " 页 GO!");
     }
 
     public JSplitPane getjSplitPane() {

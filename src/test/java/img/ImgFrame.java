@@ -1,4 +1,4 @@
-package img;
+package java.img;
 
 import com.wq.constans.Constan;
 import com.wq.util.ImageUtils;

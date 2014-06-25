@@ -50,8 +50,8 @@ public class FolderChooser extends JFileChooser {
             for (File sFile : files) {
                 ListServiceImpl.getInstance().addTreeData(sFile.getAbsolutePath());
             }
-            VpicFrame.getInstance().getRunInfo().setText("添加成功，正在建立索引...");
-            new IndexAndReloadWorker().execute();
+            VpicFrame.getInstance().getRunInfo().setText("添加新文件夹成功");
+//            new IndexAndReloadWorker().execute();
         }
     }
 

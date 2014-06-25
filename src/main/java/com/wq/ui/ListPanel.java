@@ -5,6 +5,7 @@ import com.wq.cache.AllCache;
 import com.wq.cache.LocalFileCache;
 import com.wq.cache.SystemCache;
 import com.wq.constans.Constan;
+import com.wq.context.SystemContext;
 import com.wq.model.DirMenu;
 import com.wq.service.CacheService;
 import com.wq.service.CacheServiceImpl;
@@ -199,7 +200,7 @@ public class ListPanel extends JPanel implements Page {
                 }
             }
         });
-        JButton toolBtn = new JButton("", new ImageIcon(Constan.RESPAHT + "res/img/fire.png"));
+        JButton toolBtn = new JButton("", new ImageIcon(Constan.RESPAHT + "res/img/tool.png"));
         toolBtn.setToolTipText("工具");
         toolBtn.setFont(FontUtil.getDefault());
         toolBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -273,15 +274,14 @@ public class ListPanel extends JPanel implements Page {
                         @Override
                         public void run() {
                             VpicFrame.getInstance().setInfo(dirMenu.getFilePath());
-                            if (list == null) {
-                                VpicFrame.getInstance().setNum(0);
-                            } else VpicFrame.getInstance().setNum(list.size());  //更新下方条数
+                            SystemContext.getInstance().put("ImageTotal", list == null ? 0 : list.size());
+                            VpicFrame.getInstance().refreshNum();  //更新下方条数
                         }
                     });
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                            lastFilePath=dirMenu.getFilePath();
+                            lastFilePath = dirMenu.getFilePath();
                             listService.loadPic(dirMenu.getFilePath(), list, 0);
                         }
                     });
@@ -297,7 +297,7 @@ public class ListPanel extends JPanel implements Page {
                     log.debug("path ==null 返回");
                     return;
                 }
-                log.debug("setSelectionPath:"+path);
+                log.debug("setSelectionPath:" + path);
                 tree.setSelectionPath(path);
                 if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) != 0
                         && !e.isControlDown() && !e.isShiftDown()) {
@@ -313,10 +313,10 @@ public class ListPanel extends JPanel implements Page {
                         lastFilePath = dirMenu.getFilePath();
                         TreeMenu treeMenu = new TreeMenu(lastFilePath);
                         treeMenu.show(tree, e.getX(), e.getY());
-                    }else{
+                    } else {
                         log.info("点击根节点不弹出右键菜单");
                     }
-                } else{
+                } else {
                     log.debug("非右键事件");
                 }
             }

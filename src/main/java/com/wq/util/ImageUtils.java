@@ -151,7 +151,7 @@ public class ImageUtils {
     }
 
     /**
-     * 图片等比缩放
+     * 图片等比缩放，性能比较差
      * 缩小后失真较小
      *
      * @param originalPic
@@ -176,10 +176,18 @@ public class ImageUtils {
 
         return tag;
     }
-    public static BufferedImage reduce(BufferedImage originalPic,double factor) {
+
+    /**
+     * 等比缩放，性能较好
+     *
+     * @param originalPic 原始图片
+     * @param factor      缩放倍数
+     * @return BufferedImage
+     */
+    public static BufferedImage reduce(BufferedImage originalPic, double factor) {
         BufferedImage source;
         try {
-            source =originalPic;
+            source = originalPic;
 
             int sourceW = source.getWidth();
             int sourceH = source.getHeight();
@@ -190,7 +198,7 @@ public class ImageUtils {
             boolean hasAlpha = source.getColorModel().hasAlpha();
             int format = hasAlpha ? BufferedImage.TYPE_INT_ARGB
                     : BufferedImage.TYPE_INT_RGB;
-            System.out.println("w:"+w+"h:"+h);
+//            System.out.println("w:" + w + "h:" + h);
             BufferedImage output = new BufferedImage(w, h, format);
             Graphics2D g = output.createGraphics();
 
@@ -205,6 +213,7 @@ public class ImageUtils {
         }
         return null;
     }
+
     /**
      * 缩放图像（按高度和宽度缩放）
      *

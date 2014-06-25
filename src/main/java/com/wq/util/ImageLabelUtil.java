@@ -31,12 +31,12 @@ public class ImageLabelUtil {
     public static JLabel getImageLabel(final String path) throws ManaException {
         BufferedImage bufferedImage = null;
         SysData data = SystemCache.getInstance().getData();
-        ImageIcon icon = null;
+        ImageIcon icon;
         JLabel jLabel = null;
         try {
             jLabel = new JLabel();
-        } catch (Throwable e) {
-            log.warn("创建JLabel失败",e.getMessage());
+        } catch (Throwable e) { //使用了substance可能导致动态创建JLabel失败
+            log.warn("创建JLabel失败", e.getMessage());
         }
         if (path.endsWith(".gif") || path.endsWith(".GIF")) {
             Toolkit tk = Toolkit.getDefaultToolkit();
@@ -71,8 +71,10 @@ public class ImageLabelUtil {
             }
             icon = new ImageIcon(bufferedImage);
         }
-        jLabel.setIcon(icon);
-        jLabel.setName(path);
+        if (jLabel != null) {
+            jLabel.setIcon(icon);
+            jLabel.setName(path);
+        }
         return jLabel;
     }
 }

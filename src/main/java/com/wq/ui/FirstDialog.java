@@ -17,7 +17,6 @@ import java.awt.event.ActionEvent;
 public class FirstDialog extends JDialog implements Page {
     private Container con;//容器
     private static FirstDialog firstDialog;
-    private SystemCache handler = SystemCache.getInstance();
 
     private FirstDialog() {
         constructPlate();

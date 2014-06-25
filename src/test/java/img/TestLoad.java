@@ -1,4 +1,6 @@
-package img;
+package java.img;
+
+import java.img.ImgFrame;
 
 /**
  * To change this template use File | Settings | File Templates.
