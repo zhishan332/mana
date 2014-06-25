@@ -82,18 +82,18 @@ public class SetPanel extends JFrame implements Page {
         Toolkit tk = Toolkit.getDefaultToolkit();
         Image mImage = tk.createImage(Constan.RESPAHT + "res/img/logo.png");
         setIconImage(mImage);
-        container = this.getContentPane();
+
         this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 dispose();
             }
         });
-        this.setVisible(true);
     }
 
     @Override
     public void constructPage() {
+        container = this.getContentPane();
         generalPanel = new JPanel();
         generalPanel.setBounds(4, 1, 535, 290);
         generalPanel.setLayout(null);

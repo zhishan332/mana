@@ -199,6 +199,15 @@ public class ListPanel extends JPanel implements Page {
                 }
             }
         });
+        JButton toolBtn = new JButton("", new ImageIcon(Constan.RESPAHT + "res/img/fire.png"));
+        toolBtn.setToolTipText("工具");
+        toolBtn.setFont(FontUtil.getDefault());
+        toolBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ToolPanel toolPanel = ToolPanel.getInstance();
+                toolPanel.setVisible(true);
+            }
+        });
         JButton aboutBtn = new JButton("", new ImageIcon(Constan.RESPAHT + "res/img/help.png"));
         aboutBtn.setFont(FontUtil.getDefault());
         aboutBtn.setToolTipText("关于");
@@ -228,6 +237,7 @@ public class ListPanel extends JPanel implements Page {
         toolBar.add(addBtn);
         toolBar.add(setBtn);
         toolBar.add(reBtn);
+        toolBar.add(toolBtn);
         toolBar.add(clBtn);
         toolBar.add(aboutBtn);
         toolBar.add(Box.createHorizontalGlue());
