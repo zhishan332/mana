@@ -4,11 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wangq
- * Date: 14-6-25
- * Time: 上午11:36
- * To change this template use File | Settings | File Templates.
+ * 系统上下文
+ * @author wangqing
+ * @since 1.0.0
  */
 public class SystemContext {
     private static volatile SystemContext instance = null; //必须设置为volatile否则double check可能无效（JDK1.5+）

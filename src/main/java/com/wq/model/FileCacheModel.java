@@ -1,14 +1,11 @@
 package com.wq.model;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wangq
- * Date: 14-6-14
- * Time: 下午2:19
- * To change this template use File | Settings | File Templates.
+ * 文件缓存对象
+ * @author wangqing
+ * @since 1.0.0
  */
 public class FileCacheModel implements Serializable {
     private Object object;

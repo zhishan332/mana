@@ -64,7 +64,7 @@ public class ViewContentPanel extends JPanel implements Page {
     public void constructPage() {
         log.info("开始加载图片....................");
         this.removeAll();
-        if (list != null && !list.isEmpty() && list.size() > 5) {
+        if (list != null && !list.isEmpty()) {
             showWait();
         }
         SwingUtilities.invokeLater(new Runnable() {
@@ -215,7 +215,7 @@ public class ViewContentPanel extends JPanel implements Page {
 
     private void showWait() {
         jWaitLabel.setFont(FontUtil.getSong13());
-        jWaitLabel.setText("<html><h1>图片略多，正在加载(waiting..)</h1>");
+        jWaitLabel.setText("<html><h1>正在加载(waiting..)</h1>");
         jWaitLabel.setForeground(Color.white);
         jWaitLabel.setHorizontalAlignment(SwingConstants.CENTER);
         this.add(jWaitLabel);

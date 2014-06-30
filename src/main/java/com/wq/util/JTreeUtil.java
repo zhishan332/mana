@@ -3,16 +3,12 @@ package com.wq.util;
 import javax.swing.*;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: wq
- * Date: 11-7-13
- * Time: 下午11:39
- * To change this template use File | Settings | File Templates.
+ * Swing组件JTree的工具类
+ * @author wangqing
+ * @since 1.0.0
  */
 public class JTreeUtil {
 

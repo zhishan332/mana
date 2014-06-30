@@ -1,15 +1,13 @@
 package com.wq.model;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wangq
- * Date: 13-5-17
- * Time: 下午3:05
- * To change this template use File | Settings | File Templates.
+ * 系统配置数据
+ *
+ * @author wangqing
+ * @since 1.0.0
  */
 public class SysData implements Serializable {
 
@@ -131,7 +129,6 @@ public class SysData implements Serializable {
     public void setIgnoreEmptyFolder(boolean ignoreEmptyFolder) {
         this.ignoreEmptyFolder = ignoreEmptyFolder;
     }
-
 
     public int getSpeed() {
         return speed;
