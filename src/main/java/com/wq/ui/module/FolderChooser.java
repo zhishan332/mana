@@ -51,7 +51,7 @@ public class FolderChooser extends JFileChooser {
                 ListServiceImpl.getInstance().addTreeData(sFile.getAbsolutePath());
             }
             VpicFrame.getInstance().getRunInfo().setText("添加新文件夹成功");
-//            new IndexAndReloadWorker().execute();
+            new IndexAndReloadWorker().execute();
         }
     }
 
@@ -63,7 +63,7 @@ public class FolderChooser extends JFileChooser {
             try {
                 LocalFileCache.index();
             } catch (Throwable e) {
-               log.warn("一点异常");
+               log.warn("刷新文件列表异常",e);
             }
             log.info("添加文件夹映射成功，开始刷新菜单数据..");
             return null;

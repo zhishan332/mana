@@ -3,7 +3,6 @@ package com.wq.ui;
 import com.wq.cache.LocalFileCache;
 import com.wq.cache.SystemCache;
 import com.wq.constans.Constan;
-import com.wq.exception.ManaException;
 import com.wq.model.FileCacheModel;
 import com.wq.service.ListService;
 import com.wq.service.ListServiceImpl;
@@ -76,7 +75,7 @@ public class ViewContentPanel extends JPanel implements Page {
                 }
                 long beg = System.currentTimeMillis();
                 List<String> loadList = new ArrayList<String>();
-                for (int i = start; i < list.size() && i < start +  Constan.PAGE_SHOW_NUM; i++) {
+                for (int i = start; i < list.size() && i < start + Constan.PAGE_SHOW_NUM; i++) {
                     loadList.add(list.get(i));
                 }
                 if (start > 0) {
@@ -84,7 +83,7 @@ public class ViewContentPanel extends JPanel implements Page {
                 }
                 loadPic(loadList);
                 hideWait();
-                if (list.size() > (start +  Constan.PAGE_SHOW_NUM)) {
+                if (list.size() > (start + Constan.PAGE_SHOW_NUM)) {
                     addNextButton(list, start);
                 }
                 log.info("图片加载完成，耗时：" + (System.currentTimeMillis() - beg) + "ms");
@@ -122,7 +121,7 @@ public class ViewContentPanel extends JPanel implements Page {
             if (cache != null && cache.getModifyDate() == mdate) {
                 log.info("从res/cache下加载图片>>>>>>>>>>>>>>>>>>");
                 labels = (List<JLabel>) cache.getObject();
-                log.info("从cache中获取图片数："+labels.size());
+                log.info("从cache中获取图片数：" + labels.size());
             } else {
                 boolean isSuc = true;
                 for (final String path : list) {
@@ -131,9 +130,9 @@ public class ViewContentPanel extends JPanel implements Page {
                     JLabel imgLabel;
                     try {
                         imgLabel = ImageLabelUtil.getImageLabel(path);
-                    } catch (ManaException e) {
-                        isSuc = false;
-                        break;
+                    } catch (Exception e) {
+                        log.error("加载图片异常" + path, e);
+                        continue;
                     }
                     if (null != imgLabel) labels.add(imgLabel);
                 }

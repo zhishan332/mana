@@ -47,7 +47,7 @@ public class ImageLabelUtil {
                 bufferedImage = ImageIO.read(new BufferedInputStream(new FileInputStream(path)));
             } catch (Throwable e) {
                 log.error("读取图片异常", e);
-                throw new ManaException("内存不足，加载图片失败");
+                throw new ManaException("加载图片失败",e);
             }
             if (bufferedImage == null) return null;
             if (data.isHMode()) {

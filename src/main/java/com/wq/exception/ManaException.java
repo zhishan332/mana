@@ -11,4 +11,8 @@ public class ManaException extends Exception {
     public ManaException(String msg) {
         super(msg);
     }
+
+    public ManaException(String msg,Throwable e) {
+        super(msg,e);
+    }
 }
